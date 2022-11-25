@@ -34,6 +34,7 @@ const Header = () => {
           )}
         </div>
       </Container>
+      <Underline></Underline>
       {/* <GradientDiv></GradientDiv> */}
     </Wrapper>
   );
@@ -50,7 +51,7 @@ const Wrapper = styled.div`
 const ExploreSearch = styled.div`
   display: flex;
   justify-content: center;
-  margin-left: 1275px;
+  margin-left: 800px;
   margin-top: 10px;
 `;
 
@@ -80,7 +81,7 @@ const Container = styled.div`
   padding-left: 10px;
   padding-right: 10px;
   height: 80px;
-  background-color: transparent;
+  background-color: var(--darker-pink);
 `;
 
 const Logo = styled(NavLink)`
@@ -88,6 +89,10 @@ const Logo = styled(NavLink)`
   font-size: 40px;
   text-decoration: none;
   color: black;
+`;
+
+const Underline = styled.div`
+  border-bottom: 1px solid black;
 `;
 
 export default Header;

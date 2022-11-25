@@ -46,6 +46,11 @@ footer, header, hgroup, menu, nav, section {
 }
 h1 {
 	font-size: 30px;
+	font-weight: bold;
+}
+
+h2 {
+	font-size: 20px;
 }
 body {
 	line-height: 1;

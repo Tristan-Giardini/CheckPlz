@@ -46,24 +46,32 @@ const Explore = () => {
       <BackgroundDiv>
         <Wrapper>
           <Container>
-            <h1>Popular Recipes</h1>
-            <Carousel infinite={true} shouldIndicator={false} slidesToShow={4}>
+            <h1>Popular recipes</h1>
+            <Underline></Underline>
+            <Carousel infinite={false} shouldIndicator={false} slidesToShow={3}>
               {randomRecipes.map((recipe, index) => {
                 return <MealCard key={index} recipe={recipe} />;
               })}
             </Carousel>
           </Container>
           <Container>
-            <h1>{cuisine} Recipes</h1>
-            <Carousel infinite={true} shouldIndicator={false} slidesToShow={4}>
+            <h1>
+              {cuisine.substring(0, 1).toUpperCase() + cuisine.substring(1)}{" "}
+              recipes
+            </h1>
+            <Underline></Underline>
+            <Carousel infinite={false} shouldIndicator={false} slidesToShow={3}>
               {cuisineRecipes.map((recipe, index) => {
                 return <MealCard key={index} recipe={recipe} />;
               })}
             </Carousel>
           </Container>
           <Container>
-            <h1>{diet} Recipes</h1>
-            <Carousel infinite={true} shouldIndicator={false} slidesToShow={4}>
+            <h1>
+              {diet.substring(0, 1).toUpperCase() + diet.substring(1)} recipes
+            </h1>
+            <Underline></Underline>
+            <Carousel infinite={false} shouldIndicator={false} slidesToShow={3}>
               {dietRecipes.map((recipe, index) => {
                 return <MealCard key={index} recipe={recipe} />;
               })}
@@ -85,7 +93,7 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   margin-left: 215px;
-  margin-right: 345px;
+  margin-right: 215px;
   background-color: white;
 `;
 
@@ -94,7 +102,11 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  margin: 40px;
+  margin: 20px;
+`;
+
+const Underline = styled.div`
+  border-bottom: 1px solid var(--select-grey);
 `;
 
 export default Explore;

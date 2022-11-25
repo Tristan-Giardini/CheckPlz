@@ -7,7 +7,7 @@ const getRandomRecipes = async (req, res) => {
   try {
     const result = JSON.parse(
       await request(
-        `https://api.spoonacular.com/recipes/random?apiKey=${API_KEY}&tags=main course&number=9`,
+        `https://api.spoonacular.com/recipes/random?apiKey=${API_KEY}&tags=main course&number=10`,
         // `https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY}&type=main course&number=1&addRecipeInformation=true`,
         {
           headers: { "Content-Type": "application/json" },
@@ -48,13 +48,11 @@ const filteredRecipes = async (req, res) => {
         }
       )
     );
-
     result
       ? res.status(200).json({ status: 200, data: result })
       : res.status(400).json({ status: 400, message: "Error" });
   } catch (err) {
     console.log(err);
-    // console.log(err.message);
   }
 };
 
@@ -64,6 +62,25 @@ const getRecipeBasedOnId = async (req, res) => {
     const result = JSON.parse(
       await request(
         `https://api.spoonacular.com/recipes/${id}/information?apiKey=${API_KEY}`,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      )
+    );
+    result
+      ? res.status(200).json({ status: 200, data: result })
+      : res.status(400).json({ status: 400, message: "Error" });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const getSimilarRecipes = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const result = JSON.parse(
+      await request(
+        `https://api.spoonacular.com/recipes/${id}/similar?apiKey=${API_KEY}&number=3`,
         {
           headers: { "Content-Type": "application/json" },
         }
@@ -90,7 +107,7 @@ const getDietaryRecipes = async (req, res) => {
     const randomDiet = dietValues[randomNumber];
     const result = JSON.parse(
       await request(
-        `https://api.spoonacular.com/recipes/random?apiKey=${API_KEY}&tags=${randomDiet}&number=9`,
+        `https://api.spoonacular.com/recipes/random?apiKey=${API_KEY}&tags=${randomDiet}&number=0`,
         {
           headers: { "Content-Type": "application/json" },
         }
@@ -130,7 +147,7 @@ const getCuisineRecipes = async (req, res) => {
     const randomCuisine = cuisineValues[randomNumber];
     const result = JSON.parse(
       await request(
-        `https://api.spoonacular.com/recipes/random?apiKey=${API_KEY}&tags=${randomCuisine}&number=9`,
+        `https://api.spoonacular.com/recipes/random?apiKey=${API_KEY}&tags=${randomCuisine}&number=0`,
         {
           headers: { "Content-Type": "application/json" },
         }
@@ -152,4 +169,5 @@ module.exports = {
   getRecipeBasedOnId,
   getDietaryRecipes,
   getCuisineRecipes,
+  getSimilarRecipes,
 };

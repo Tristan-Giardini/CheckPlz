@@ -4,10 +4,9 @@ import MealCard from "./MealCard";
 import Carousel from "styled-components-carousel";
 
 const ComplexSearch = () => {
-  const [formData, setFormData] = useState({});
   const [filteredRecipes, setFilteredRecipes] = useState(null);
+  const [formData, setFormData] = useState({});
 
-  console.log("from", formData);
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: [e.target.value] });
   };
@@ -24,9 +23,11 @@ const ComplexSearch = () => {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data.data);
+        setFilteredRecipes(data.data.results);
       });
   };
+
+  console.log("form", formData);
 
   return (
     <>
@@ -119,7 +120,7 @@ const ComplexSearch = () => {
         <>
           <Container>
             <h1>Results</h1>
-            <Carousel infinite={true} shouldIndicator={false} slidesToShow={4}>
+            <Carousel infinite={false} shouldIndicator={false} slidesToShow={4}>
               {filteredRecipes.map((recipe, index) => {
                 return <MealCard key={index} recipe={recipe} />;
               })}

@@ -14,6 +14,10 @@ const MealCard = ({ recipe }) => {
         </StyledNavLink>
         <div>Serves {recipe.servings}</div>
         <div>Ready in {recipe.readyInMinutes} minutes</div>
+        <Emojis>
+          <div>🤢</div>
+          <div>😍</div>
+        </Emojis>
       </Container>
       {/* </Wrapper> */}
       {/* </Body> */}
@@ -34,6 +38,7 @@ const MealCard = ({ recipe }) => {
 // `;
 
 const Container = styled.div`
+  position: relative;
   border-style: solid;
   border-width: 1px;
   border-color: var(--off-white);
@@ -68,6 +73,18 @@ const StyledNavLink = styled(NavLink)`
   :hover {
     color: var(--dark-pink);
     font-weight: bolder;
+  }
+`;
+
+const Emojis = styled.div`
+  display: flex;
+  flex-direction: row;
+  position: absolute;
+  margin-left: 160px;
+  margin-top: 220px;
+
+  div {
+    font-size: 30px;
   }
 `;
 

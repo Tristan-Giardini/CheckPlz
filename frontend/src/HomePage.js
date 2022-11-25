@@ -12,8 +12,10 @@ const Homepage = () => {
       <div>
         <img src={Svg}></img>
       </div>
-      <Produce src={produce}></Produce>
-      <Plate src={plate}></Plate>
+      <ImageDiv>
+        <Produce src={produce}></Produce>
+        <Plate src={plate}></Plate>
+      </ImageDiv>
     </Wrapper>
   );
 };
@@ -24,23 +26,26 @@ const Wrapper = styled.div`
   position: relative;
   flex-direction: column;
   div {
-    margin-top: -125px;
+    margin-top: -75px;
   }
 `;
 
-const ImageDiv = styled.div``;
+const ImageDiv = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
 
 const Produce = styled.img`
-  margin-top: -250px;
+  margin-top: -50px;
   max-width: 50%;
-  clip-path: inset(0 0 350px 0);
+  clip-path: inset(0 0 260px 0);
 `;
 
 const Plate = styled.img`
   max-width: 25%;
   position: absolute;
-  margin-left: 1300px;
-  margin-top: 250px;
+  margin-left: 1000px;
+  margin-top: 140px;
 `;
 
 export default Homepage;
