@@ -1,8 +1,25 @@
 const express = require("express");
-const app = express();
-const { getRandom, recipesByIngredients } = require("./handlers");
+const helmet = require("helmet");
+const morgan = require("morgan");
 
-app.get("/fetch-message", getRandom);
-app.get("/specific-recipes", recipesByIngredients);
+const app = express();
+
+const {
+  filteredRecipes,
+  getRandomRecipes,
+  getRecipeBasedOnId,
+  getDietaryRecipes,
+  getCuisineRecipes,
+} = require("./handlers");
+
+app.use(express.json());
+app.use(helmet());
+app.use(morgan("tiny"));
+
+app.get("/random-recipes", getRandomRecipes);
+app.get("/single-recipe/:id", getRecipeBasedOnId);
+app.get("/cuisine-recipes", getCuisineRecipes);
+app.get("/dietary-recipes", getDietaryRecipes);
+app.post("/filtered-recipes", filteredRecipes);
 
 app.listen(8000, () => console.log("Listening on port 8000"));
