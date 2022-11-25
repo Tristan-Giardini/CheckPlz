@@ -23,6 +23,7 @@ const Button = styled.button`
   border-color: transparent; */
   color: black;
   font-size: 20px;
+  padding-top: 9px;
   /* padding: 18px;
   margin: 10px; */
   text-decoration: none;

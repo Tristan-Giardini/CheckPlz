@@ -4,9 +4,10 @@ import styled from "styled-components";
 import { useAuth0 } from "@auth0/auth0-react";
 import { NavLink } from "react-router-dom";
 import { GiCookingGlove } from "react-icons/gi";
+import Profile from "./Profile";
 
 const Header = () => {
-  const { isLoading, error } = useAuth0(); //imported for conditional rendering
+  const { isLoading, error, isAuthenticated } = useAuth0(); //imported for conditional rendering
 
   return (
     <Wrapper>
@@ -19,6 +20,11 @@ const Header = () => {
         <ExploreSearch>
           <ExploreNav to={"/explore"}>Explore</ExploreNav>
           <SearchNav to={"/search"}>Search</SearchNav>
+          {isAuthenticated ? (
+            <ProfileNav to={"/profile"}>Profile</ProfileNav>
+          ) : (
+            ""
+          )}
         </ExploreSearch>
         <div>
           {/* <NavLink to={"/profile"}>Profile</NavLink> */}
@@ -28,8 +34,6 @@ const Header = () => {
             <>
               <LoginButton />
               <LogoutButton />
-
-              {/* <Profile /> */}
             </>
           )}
         </div>
@@ -51,7 +55,7 @@ const Wrapper = styled.div`
 const ExploreSearch = styled.div`
   display: flex;
   justify-content: center;
-  margin-left: 800px;
+  margin-left: 700px;
   margin-top: 10px;
 `;
 
@@ -65,6 +69,15 @@ const ExploreNav = styled(NavLink)`
 `;
 
 const SearchNav = styled(NavLink)`
+  padding: 20px;
+  margin: 10px;
+  text-decoration: none;
+  color: black;
+  font-size: 20px;
+  font-weight: bold;
+`;
+
+const ProfileNav = styled(NavLink)`
   padding: 20px;
   margin: 10px;
   text-decoration: none;

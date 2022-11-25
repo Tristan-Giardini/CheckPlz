@@ -6,9 +6,13 @@ import SimilarRecipeCard from "./SimilarRecipeCard";
 
 const Recipe = () => {
   const { id } = useParams();
-  const [recipe, setRecipe] = useState(null);
+  const [recipe, setRecipe] = useState({});
   const [similarRecipes, setSimilarRecipes] = useState(null);
+  const [updatedIngredient, setUpdatedIngredient] = useState("");
+  const [editIndex, setEditIndex] = useState(0);
+  const [isEditOpen, setIsEditOpen] = useState(false);
 
+  console.log("recipe", recipe);
   useEffect(() => {
     fetch(`/single-recipe/${id}`).then((res) => {
       res
@@ -23,6 +27,23 @@ const Recipe = () => {
         .catch((e) => console.log("got error", e));
     });
   }, []);
+
+  const editHandler = (index, ingredient) => {
+    setUpdatedIngredient(ingredient);
+    setIsEditOpen(true);
+    setEditIndex(index);
+  };
+  const saveHandler = (id) => {
+    const newRecipe = { ...recipe };
+    const index = newRecipe.extendedIngredients.findIndex(
+      (obj) => obj.id === id
+    );
+    if (index !== -1) {
+      newRecipe.extendedIngredients[index].original = updatedIngredient;
+    }
+    setRecipe(newRecipe);
+    setIsEditOpen(false);
+  };
 
   if (!recipe || !similarRecipes) {
     return <h1>Loading...</h1>;
@@ -63,10 +84,40 @@ const Recipe = () => {
           <IngredientsDirections>
             <Ingredients>
               <h1>Ingredients:</h1>
-              {recipe.extendedIngredients.map((ingredient) => {
+              {recipe.extendedIngredients.map((ingredient, index) => {
                 return (
                   <>
                     <div>{ingredient.original}</div>
+                    {!isEditOpen && (
+                      <button
+                        onClick={() => {
+                          editHandler(index, ingredient.original);
+                        }}
+                      >
+                        Edit
+                      </button>
+                    )}
+                    {isEditOpen && index === editIndex && (
+                      <>
+                        <textarea
+                          name={ingredient.original}
+                          id={ingredient.original}
+                          cols="30"
+                          rows="10"
+                          value={updatedIngredient}
+                          onChange={(e) => {
+                            setUpdatedIngredient(e.target.value);
+                          }}
+                        ></textarea>
+                        <button
+                          onClick={() => {
+                            saveHandler(ingredient.id);
+                          }}
+                        >
+                          Save
+                        </button>
+                      </>
+                    )}
                   </>
                 );
               })}

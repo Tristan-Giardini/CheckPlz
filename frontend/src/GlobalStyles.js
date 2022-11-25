@@ -56,6 +56,10 @@ body {
 	line-height: 1;
 	font-family: var(--font-body);
 }
+button {
+	font-family: var(--font-body);
+	font-weight: bold;
+}
 ol, ul {
 	list-style: none;
 }
