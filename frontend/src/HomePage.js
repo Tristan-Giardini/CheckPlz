@@ -5,8 +5,42 @@ import Image from "./assets/Groceries-960.jpeg";
 import Svg from "./assets/wave.svg";
 import plate from "./assets/plate.png";
 import produce from "./assets/produceleft.png";
+import { useAuth0 } from "@auth0/auth0-react";
+import { useContext } from "react";
+import { UserContext } from "./UserContext";
 
 const Homepage = () => {
+  const { user, isAuthenticated } = useAuth0();
+  const { userId } = useContext(UserContext);
+  let newUser = {};
+
+  if (isAuthenticated) {
+    newUser = { ...user, _id: user.sub };
+    sessionStorage.setItem("userId", JSON.stringify(newUser._id));
+  }
+
+  console.log(userId);
+
+  // useEffect(() => {
+  //   if (user) {
+  //     fetch("user", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify(newUser),
+  //     })
+  //       .then((response) => response.json())
+  //       .then((data) => {
+  //         console.log("Success:", data);
+  //         setUserId(data.data.insertedId);
+  //       })
+  //       .catch((error) => {
+  //         console.error("Error:", error);
+  //       });
+  //   }
+  // }, [isAuthenticated]);
+
   return (
     <Wrapper>
       <div>

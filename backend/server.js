@@ -12,6 +12,8 @@ const {
   getCuisineRecipes,
   getSimilarRecipes,
   handleUser,
+  updateLikes,
+  updateDislikes,
 } = require("./handlers");
 
 app.use(express.json());
@@ -27,5 +29,7 @@ app.post("/filtered-recipes", filteredRecipes);
 
 // user
 app.post("/user", handleUser);
+app.patch("/likes", updateLikes);
+app.patch("/dislikes", updateDislikes);
 
 app.listen(8000, () => console.log("Listening on port 8000"));

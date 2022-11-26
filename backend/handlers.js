@@ -4,6 +4,7 @@ const requestPromise = require("request-promise");
 const request = require("request-promise");
 const { v4: uuid } = require("uuid");
 const { MongoClient } = require("mongodb");
+const e = require("express");
 const options = {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -174,12 +175,33 @@ const handleUser = async (req, res) => {
     const client = await new MongoClient(MONGO_URI, options);
     await client.connect();
     const db = client.db("CheckPlz");
-    await db.collection("Users").insertOne(req.body);
-    res.status(200).json({ status: 200, message: "user added" });
-  } catch (err) {
-    res.status(400).json({ status: 400, message: "couldnt add the user" });
-  }
+    const { given_name, family_name, email } = req.body;
+    const userValues = {
+      _id: uuid(),
+      given_name: given_name,
+      family_name: family_name,
+      email: email,
+    };
+    const users = await db.collection("Users").find().toArray();
+    console.log(users);
+    let result = {};
+    users.forEach((user) => {
+      if (user.email === email) {
+        return res
+          .status(400)
+          .json({ status: 400, message: "User email already exists!" });
+      }
+    });
+    result = await db.collection("Users").insertOne(userValues);
+    return res
+      .status(200)
+      .json({ status: 200, message: "User added", data: result });
+  } catch (err) {}
 };
+
+const updateLikes = () => {};
+
+const updateDislikes = () => {};
 
 module.exports = {
   filteredRecipes,
@@ -189,4 +211,6 @@ module.exports = {
   getCuisineRecipes,
   getSimilarRecipes,
   handleUser,
+  updateLikes,
+  updateDislikes,
 };

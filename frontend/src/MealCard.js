@@ -1,8 +1,21 @@
 import React from "react";
 import styled from "styled-components";
 import { NavLink } from "react-router-dom";
+import { useAuth0 } from "@auth0/auth0-react";
+import { useState } from "react";
 
 const MealCard = ({ recipe }) => {
+  const { user, isAuthenticated } = useAuth0();
+  const [isLiked, setIsLiked] = useState(false);
+  const [isDisliked, setIsDisliked] = useState(false);
+
+  const handleDislike = () => {
+    setIsDisliked(true);
+  };
+  const handleLike = () => {
+    setIsLiked(true);
+  };
+
   return (
     <>
       {/* <Body> */}
@@ -15,8 +28,8 @@ const MealCard = ({ recipe }) => {
         <div>Serves {recipe.servings}</div>
         <div>Ready in {recipe.readyInMinutes} minutes</div>
         <Emojis>
-          <div>🤢</div>
-          <div>😍</div>
+          <button onClick={handleDislike}>🤢</button>
+          <button onClick={handleLike}>😍</button>
         </Emojis>
       </Container>
       {/* </Wrapper> */}
@@ -62,8 +75,61 @@ const Container = styled.div`
   }
 `;
 
+const LikedContainer = styled.div`
+  position: relative;
+  border-style: solid;
+  border-width: 1px;
+  border-color: var(--off-white);
+  width: 255px;
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  margin: 30px;
+  border-radius: 10px;
+  background-color: red;
+  img {
+    max-width: 250px;
+    border-radius: 10px;
+  }
+  div {
+    padding: 5px;
+  }
+  transition: 1s ease-in-out;
+  :hover {
+    background-color: var(--select-grey);
+  }
+`;
+
+const DislikedContainer = styled.div`
+  position: relative;
+  border-style: solid;
+  border-width: 1px;
+  border-color: var(--off-white);
+  width: 255px;
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  margin: 30px;
+  border-radius: 10px;
+  background-color: green;
+  img {
+    max-width: 250px;
+    border-radius: 10px;
+  }
+  div {
+    padding: 5px;
+  }
+  transition: 1s ease-in-out;
+  :hover {
+    background-color: var(--select-grey);
+  }
+`;
+
 const Title = styled.div`
   font-size: 20px;
+  height: 60px;
 `;
 
 const StyledNavLink = styled(NavLink)`
@@ -78,11 +144,17 @@ const StyledNavLink = styled(NavLink)`
 
 const Emojis = styled.div`
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   position: absolute;
-  margin-left: 160px;
+  justify-content: space-between;
+  margin-left: 200px;
   margin-top: 220px;
-
+  button {
+    background-color: transparent;
+    background-repeat: no-repeat;
+    border: none;
+    font-size: 30px;
+  }
   div {
     font-size: 30px;
   }

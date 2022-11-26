@@ -2,9 +2,10 @@ import { useAuth0 } from "@auth0/auth0-react";
 import React from "react";
 import styled from "styled-components";
 
-const Profile = () => {
+const Profile = ({ userId }) => {
   const { user, isAuthenticated } = useAuth0();
-  console.log(user);
+  console.log("user id:", user.sub);
+  console.log("user", user);
   return (
     isAuthenticated && (
       <Wrapper>

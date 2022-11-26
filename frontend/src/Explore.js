@@ -5,7 +5,7 @@ import MealCard from "./MealCard";
 import Carousel from "styled-components-carousel";
 import styled from "styled-components";
 
-const Explore = () => {
+const Explore = ({ likedRecipes, dislikedRecipes }) => {
   const [randomRecipes, setRandomRecipes] = useState(null);
   const [cuisineRecipes, setCuisineRecipes] = useState(null);
   const [dietRecipes, setDietRecipes] = useState(null);
@@ -48,7 +48,7 @@ const Explore = () => {
           <Container>
             <h1>Popular recipes</h1>
             <Underline></Underline>
-            <Carousel infinite={false} shouldIndicator={false} slidesToShow={3}>
+            <Carousel infinite={false} showIndicator={false} slidesToShow={3}>
               {randomRecipes.map((recipe, index) => {
                 return <MealCard key={index} recipe={recipe} />;
               })}
@@ -60,7 +60,7 @@ const Explore = () => {
               recipes
             </h1>
             <Underline></Underline>
-            <Carousel infinite={false} shouldIndicator={false} slidesToShow={3}>
+            <Carousel infinite={false} showIndicator={false} slidesToShow={3}>
               {cuisineRecipes.map((recipe, index) => {
                 return <MealCard key={index} recipe={recipe} />;
               })}
@@ -71,7 +71,7 @@ const Explore = () => {
               {diet.substring(0, 1).toUpperCase() + diet.substring(1)} recipes
             </h1>
             <Underline></Underline>
-            <Carousel infinite={false} shouldIndicator={false} slidesToShow={3}>
+            <Carousel infinite={false} showIndicator={false} slidesToShow={3}>
               {dietRecipes.map((recipe, index) => {
                 return <MealCard key={index} recipe={recipe} />;
               })}
