@@ -202,12 +202,81 @@ const handleUser = async (req, res) => {
     return res
       .status(200)
       .json({ status: 200, message: "User added", data: result });
-  } catch (err) {}
+  } catch (err) {
+    res.status(400).json({ status: 400, message: "Could not add user" });
+  }
 };
 
-const updateLikes = () => {};
+const updateLikes = async (req, res) => {
+  try {
+    const client = await new MongoClient(MONGO_URI, options);
+    await client.connect();
+    const db = client.db("CheckPlz");
+    const { email, recipe } = req.body;
+    await db
+      .collection("Users")
+      .updateOne({ email }, { $pull: { dislikes: recipe } });
+    const result = await db
+      .collection("Users")
+      .updateOne({ email }, { $addToSet: { likes: recipe } });
+    if (result) {
+      res
+        .status(200)
+        .json({ status: 200, message: "Like added", data: result });
+    }
+  } catch (err) {
+    res.status(400).json({ status: 400, message: "Could not update likes" });
+  }
+};
 
-const updateDislikes = () => {};
+const removeLike = async (req, res) => {
+  try {
+    const client = await new MongoClient(MONGO_URI, options);
+    await client.connect();
+    const db = client.db("CheckPlz");
+    const { email, recipe } = req.body;
+    await db
+      .collection("Users")
+      .updateOne({ email }, { $pull: { likes: recipe } });
+    res.status(200).json({ status: 200, message: "Like removed!" });
+  } catch (err) {
+    res.status(400).json({ status: 400, message: "Could not update likes" });
+  }
+};
+
+const removeDislike = async (req, res) => {
+  try {
+    const client = await new MongoClient(MONGO_URI, options);
+    await client.connect();
+    const db = client.db("CheckPlz");
+    const { email, recipe } = req.body;
+    await db
+      .collection("Users")
+      .updateOne({ email }, { $pull: { dislikes: recipe } });
+    res.status(200).json({ status: 200, message: "Dislike removed!" });
+  } catch (err) {
+    res.status(400).json({ status: 400, message: "Could not update likes" });
+  }
+};
+
+const updateDislikes = async (req, res) => {
+  try {
+    const client = await new MongoClient(MONGO_URI, options);
+    await client.connect();
+    const db = client.db("CheckPlz");
+    const { email, recipe } = req.body;
+    const recipeNum = Number(recipe);
+    await db
+      .collection("Users")
+      .updateOne({ email }, { $pull: { likes: recipeNum } });
+    await db
+      .collection("Users")
+      .updateOne({ email }, { $addToSet: { dislikes: recipeNum } });
+    res.status(200).json({ status: 200, message: "Dislike added" });
+  } catch (err) {
+    res.status(400).json({ status: 400, message: "Could not update dislikes" });
+  }
+};
 
 module.exports = {
   filteredRecipes,
@@ -219,4 +288,6 @@ module.exports = {
   handleUser,
   updateLikes,
   updateDislikes,
+  removeLike,
+  removeDislike,
 };

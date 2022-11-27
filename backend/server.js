@@ -14,6 +14,8 @@ const {
   handleUser,
   updateLikes,
   updateDislikes,
+  removeLike,
+  removeDislike,
 } = require("./handlers");
 
 app.use(express.json());
@@ -29,7 +31,9 @@ app.post("/filtered-recipes", filteredRecipes);
 
 // user
 app.post("/user", handleUser);
-app.patch("/likes", updateLikes);
-app.patch("/dislikes", updateDislikes);
+app.patch("/like", updateLikes);
+app.patch("/dislike", updateDislikes);
+app.patch("/remove-like", removeLike);
+app.patch("/remove-dislike", removeDislike);
 
 app.listen(8000, () => console.log("Listening on port 8000"));
