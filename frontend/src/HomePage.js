@@ -19,27 +19,24 @@ const Homepage = () => {
     sessionStorage.setItem("userId", JSON.stringify(newUser._id));
   }
 
-  console.log(userId);
-
-  // useEffect(() => {
-  //   if (user) {
-  //     fetch("user", {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify(newUser),
-  //     })
-  //       .then((response) => response.json())
-  //       .then((data) => {
-  //         console.log("Success:", data);
-  //         setUserId(data.data.insertedId);
-  //       })
-  //       .catch((error) => {
-  //         console.error("Error:", error);
-  //       });
-  //   }
-  // }, [isAuthenticated]);
+  useEffect(() => {
+    user &&
+      newUser &&
+      fetch("user", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newUser),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("Success:", data);
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+  }, [isAuthenticated]);
 
   return (
     <Wrapper>

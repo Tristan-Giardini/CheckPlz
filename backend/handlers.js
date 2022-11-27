@@ -175,9 +175,9 @@ const handleUser = async (req, res) => {
     const client = await new MongoClient(MONGO_URI, options);
     await client.connect();
     const db = client.db("CheckPlz");
-    const { given_name, family_name, email } = req.body;
+    const { _id, given_name, family_name, email } = req.body;
     const userValues = {
-      _id: uuid(),
+      _id: _id,
       given_name: given_name,
       family_name: family_name,
       email: email,
@@ -185,13 +185,19 @@ const handleUser = async (req, res) => {
     const users = await db.collection("Users").find().toArray();
     console.log(users);
     let result = {};
+
+    if (given_name === null || family_name === null || email === null) {
+      res.status(400).json({ status: 400, message: "You don't exist" });
+    }
+
     users.forEach((user) => {
-      if (user.email === email) {
+      if (user._id === _id) {
         return res
           .status(400)
-          .json({ status: 400, message: "User email already exists!" });
+          .json({ status: 400, message: "User already exists!" });
       }
     });
+
     result = await db.collection("Users").insertOne(userValues);
     return res
       .status(200)
