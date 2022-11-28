@@ -1,16 +1,18 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useState } from "react";
 import { useEffect } from "react";
 import MealCard from "./MealCard";
 import Carousel from "styled-components-carousel";
 import styled from "styled-components";
+import { UserContext } from "./UserContext";
 
-const Explore = ({ likedRecipes, dislikedRecipes }) => {
+const Explore = ({ likedRecipes, dislikedRecipes, userPreferences }) => {
   const [randomRecipes, setRandomRecipes] = useState(null);
   const [cuisineRecipes, setCuisineRecipes] = useState(null);
   const [dietRecipes, setDietRecipes] = useState(null);
   const [cuisine, setCuisine] = useState(null);
   const [diet, setDiet] = useState(null);
+  const { userId, user } = useContext(UserContext);
 
   useEffect(() => {
     fetch("/random-recipes").then((res) => {
@@ -50,7 +52,13 @@ const Explore = ({ likedRecipes, dislikedRecipes }) => {
             <Underline></Underline>
             <Carousel infinite={false} showIndicator={false} slidesToShow={3}>
               {randomRecipes.map((recipe, index) => {
-                return <MealCard key={index} recipe={recipe} />;
+                return (
+                  <MealCard
+                    key={index}
+                    recipe={recipe}
+                    userPreferences={userPreferences}
+                  />
+                );
               })}
             </Carousel>
           </Container>
@@ -62,7 +70,13 @@ const Explore = ({ likedRecipes, dislikedRecipes }) => {
             <Underline></Underline>
             <Carousel infinite={false} showIndicator={false} slidesToShow={3}>
               {cuisineRecipes.map((recipe, index) => {
-                return <MealCard key={index} recipe={recipe} />;
+                return (
+                  <MealCard
+                    key={index}
+                    recipe={recipe}
+                    userPreferences={userPreferences}
+                  />
+                );
               })}
             </Carousel>
           </Container>
@@ -73,7 +87,13 @@ const Explore = ({ likedRecipes, dislikedRecipes }) => {
             <Underline></Underline>
             <Carousel infinite={false} showIndicator={false} slidesToShow={3}>
               {dietRecipes.map((recipe, index) => {
-                return <MealCard key={index} recipe={recipe} />;
+                return (
+                  <MealCard
+                    key={index}
+                    recipe={recipe}
+                    userPreferences={userPreferences}
+                  />
+                );
               })}
             </Carousel>
           </Container>

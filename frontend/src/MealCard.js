@@ -1,4 +1,3 @@
-import React from "react";
 import styled from "styled-components";
 import { NavLink } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
@@ -6,13 +5,13 @@ import { useState } from "react";
 import { UserContext } from "./UserContext";
 import { useContext } from "react";
 
-const MealCard = ({ recipe }) => {
-  const { user, isAuthenticated } = useAuth0();
-  const { userId } = useContext(UserContext);
+const MealCard = ({ recipe, userPreferences }) => {
+  const { user } = useAuth0();
   const [isLiked, setIsLiked] = useState(false);
   const [isDisliked, setIsDisliked] = useState(false);
+  const { userId } = useContext(UserContext);
 
-  const likes = { recipe: recipe.id, email: user.email };
+  const likes = { recipe: recipe.id, id: userId };
 
   const handleDislike = () => {
     setIsDisliked((previsDisliked) => !isDisliked);
@@ -87,37 +86,44 @@ const MealCard = ({ recipe }) => {
     }
   };
 
-  console.log(isLiked);
-
-  return (
-    <>
-      {/* <Body> */}
-      {/* <Wrapper> */}
-      {/* <Gross>Gross</Gross> */}
-      <Emojis>
-        <Dislike
-          onClick={handleDislike}
-          isLiked={isLiked}
-          isDisliked={isDisliked}
-        >
-          🤢
-        </Dislike>
-        <Like onClick={handleLike} isLiked={isLiked} isDisliked={isDisliked}>
-          😍
-        </Like>
-      </Emojis>
-      <Container isLiked={isLiked} isDisliked={isDisliked}>
-        <StyledNavLink to={`/recipe/${recipe.id}`}>
-          <img src={recipe.image} />
-          <Title>{recipe.title}</Title>
-        </StyledNavLink>
-        <div>Serves {recipe.servings}</div>
-        <div>Ready in {recipe.readyInMinutes} minutes</div>
-      </Container>
-      {/* </Wrapper> */}
-      {/* </Body> */}
-    </>
-  );
+  if (!userPreferences) {
+    return <h1>Loading...</h1>;
+  } else {
+    return (
+      <>
+        {/* {userPreferences.likes.forEach((item) => {
+          if (item === recipe.id) {
+            setIsLiked(true);
+          }
+        })} */}
+        {/* <Body> */}
+        {/* <Wrapper> */}
+        {/* <Gross>Gross</Gross> */}
+        <Emojis>
+          <Dislike
+            onClick={handleDislike}
+            isLiked={isLiked}
+            isDisliked={isDisliked}
+          >
+            🤢
+          </Dislike>
+          <Like onClick={handleLike} isLiked={isLiked} isDisliked={isDisliked}>
+            😍
+          </Like>
+        </Emojis>
+        <Container isLiked={isLiked} isDisliked={isDisliked}>
+          <StyledNavLink to={`/recipe/${recipe.id}`}>
+            <img src={recipe.image} />
+            <Title>{recipe.title}</Title>
+          </StyledNavLink>
+          <div>Serves {recipe.servings}</div>
+          <div>Ready in {recipe.readyInMinutes} minutes</div>
+        </Container>
+        {/* </Wrapper> */}
+        {/* </Body> */}
+      </>
+    );
+  }
 };
 
 const Container = styled.div`

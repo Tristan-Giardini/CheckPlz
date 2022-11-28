@@ -16,6 +16,7 @@ const {
   updateDislikes,
   removeLike,
   removeDislike,
+  getPreferences,
 } = require("./handlers");
 
 app.use(express.json());
@@ -30,6 +31,7 @@ app.get("/similar-recipes/:id", getSimilarRecipes);
 app.post("/filtered-recipes", filteredRecipes);
 
 // user
+app.get("/preferences/:id", getPreferences);
 app.post("/user", handleUser);
 app.patch("/like", updateLikes);
 app.patch("/dislike", updateDislikes);

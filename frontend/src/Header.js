@@ -4,7 +4,6 @@ import styled from "styled-components";
 import { useAuth0 } from "@auth0/auth0-react";
 import { NavLink } from "react-router-dom";
 import { GiCookingGlove } from "react-icons/gi";
-import Profile from "./Profile";
 
 const Header = () => {
   const { isLoading, error, isAuthenticated } = useAuth0(); //imported for conditional rendering
@@ -18,7 +17,7 @@ const Header = () => {
           </Logo>
         </div>
         <ExploreSearch>
-          <ExploreNav to={"/explore"}>Explore</ExploreNav>
+          <ExploreNav to={`/explore`}>Explore</ExploreNav>
           <SearchNav to={"/search"}>Search</SearchNav>
           {isAuthenticated ? (
             <ProfileNav to={"/profile"}>Profile</ProfileNav>

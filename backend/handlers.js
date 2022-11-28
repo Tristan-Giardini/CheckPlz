@@ -3,12 +3,14 @@ const { API_KEY, MONGO_URI } = process.env;
 const requestPromise = require("request-promise");
 const request = require("request-promise");
 const { v4: uuid } = require("uuid");
-const { MongoClient } = require("mongodb");
+const { MongoClient, ObjectId } = require("mongodb");
 const e = require("express");
 const options = {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 };
+
+const client = new MongoClient(MONGO_URI, options);
 
 const getRandomRecipes = async (req, res) => {
   try {
@@ -44,9 +46,6 @@ const filteredRecipes = async (req, res) => {
       }
     });
     newIngredients = newIngredients.join();
-
-    console.log(newIngredients);
-
     const result = JSON.parse(
       await request(
         `https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY}&includeIngredients=${newIngredients}&ignorePantry=true&instructionsRequired=true&addRecipeInformation=true&number=5&diet=${diet[0]}&cuisine=${cuisine[0]}`,
@@ -167,12 +166,13 @@ const getCuisineRecipes = async (req, res) => {
       : res.status(400).json({ status: 400, message: "Error" });
   } catch (err) {
     console.log(err);
+  } finally {
+    client.close();
   }
 };
 
 const handleUser = async (req, res) => {
   try {
-    const client = await new MongoClient(MONGO_URI, options);
     await client.connect();
     const db = client.db("CheckPlz");
     const { _id, given_name, family_name, email } = req.body;
@@ -183,42 +183,45 @@ const handleUser = async (req, res) => {
       email: email,
     };
     const users = await db.collection("Users").find().toArray();
-    console.log(users);
-    let result = {};
 
-    if (given_name === null || family_name === null || email === null) {
-      res.status(400).json({ status: 400, message: "You don't exist" });
-    }
+    let result = {};
+    let repeat = false;
 
     users.forEach((user) => {
       if (user._id === _id) {
-        return res
-          .status(400)
-          .json({ status: 400, message: "User already exists!" });
+        repeat = true;
       }
     });
 
-    result = await db.collection("Users").insertOne(userValues);
-    return res
-      .status(200)
-      .json({ status: 200, message: "User added", data: result });
+    if (repeat) {
+      return res
+        .status(400)
+        .json({ status: 400, message: "User already exists!" });
+    } else {
+      result = await db.collection("Users").insertOne(userValues);
+      return res
+        .status(200)
+        .json({ status: 200, message: "User added", data: result });
+    }
   } catch (err) {
-    res.status(400).json({ status: 400, message: "Could not add user" });
+    console.log(err);
+  } finally {
+    client.close();
   }
 };
 
 const updateLikes = async (req, res) => {
   try {
-    const client = await new MongoClient(MONGO_URI, options);
     await client.connect();
     const db = client.db("CheckPlz");
-    const { email, recipe } = req.body;
+    const { id, recipe } = req.body;
+    const newId = id.slice(1, id.length - 1);
     await db
       .collection("Users")
-      .updateOne({ email }, { $pull: { dislikes: recipe } });
+      .updateOne({ _id: newId }, { $pull: { dislikes: recipe } });
     const result = await db
       .collection("Users")
-      .updateOne({ email }, { $addToSet: { likes: recipe } });
+      .updateOne({ _id: newId }, { $addToSet: { likes: recipe } });
     if (result) {
       res
         .status(200)
@@ -226,55 +229,78 @@ const updateLikes = async (req, res) => {
     }
   } catch (err) {
     res.status(400).json({ status: 400, message: "Could not update likes" });
+  } finally {
+    client.close();
   }
 };
 
 const removeLike = async (req, res) => {
   try {
-    const client = await new MongoClient(MONGO_URI, options);
     await client.connect();
     const db = client.db("CheckPlz");
-    const { email, recipe } = req.body;
+    const { id, recipe } = req.body;
+    const newId = id.slice(1, id.length - 1);
     await db
       .collection("Users")
-      .updateOne({ email }, { $pull: { likes: recipe } });
+      .updateOne({ _id: newId }, { $pull: { likes: recipe } });
     res.status(200).json({ status: 200, message: "Like removed!" });
   } catch (err) {
     res.status(400).json({ status: 400, message: "Could not update likes" });
+  } finally {
+    client.close();
   }
 };
 
 const removeDislike = async (req, res) => {
   try {
-    const client = await new MongoClient(MONGO_URI, options);
     await client.connect();
     const db = client.db("CheckPlz");
-    const { email, recipe } = req.body;
+    const { id, recipe } = req.body;
+    const newId = id.slice(1, id.length - 1);
     await db
       .collection("Users")
-      .updateOne({ email }, { $pull: { dislikes: recipe } });
+      .updateOne({ _id: newId }, { $pull: { dislikes: recipe } });
     res.status(200).json({ status: 200, message: "Dislike removed!" });
   } catch (err) {
     res.status(400).json({ status: 400, message: "Could not update likes" });
+  } finally {
+    client.close();
   }
 };
 
 const updateDislikes = async (req, res) => {
   try {
-    const client = await new MongoClient(MONGO_URI, options);
     await client.connect();
     const db = client.db("CheckPlz");
-    const { email, recipe } = req.body;
+    const { id, recipe } = req.body;
+    const newId = id.slice(1, id.length - 1);
     const recipeNum = Number(recipe);
     await db
       .collection("Users")
-      .updateOne({ email }, { $pull: { likes: recipeNum } });
+      .updateOne({ _id: newId }, { $pull: { likes: recipeNum } });
     await db
       .collection("Users")
-      .updateOne({ email }, { $addToSet: { dislikes: recipeNum } });
+      .updateOne({ _id: newId }, { $addToSet: { dislikes: recipeNum } });
     res.status(200).json({ status: 200, message: "Dislike added" });
   } catch (err) {
     res.status(400).json({ status: 400, message: "Could not update dislikes" });
+  } finally {
+    client.close();
+  }
+};
+
+const getPreferences = async (req, res) => {
+  try {
+    await client.connect();
+    const db = client.db("CheckPlz");
+    const id = req.params.id;
+    const newId = id.slice(1, id.length - 1);
+    const result = await db.collection("Users").findOne({ _id: newId });
+    res.status(200).json({ status: 200, message: "User found", data: result });
+  } catch (err) {
+    res.status(400).json({ status: 400, message: "Could not find user" });
+  } finally {
+    client.close();
   }
 };
 
@@ -290,4 +316,5 @@ module.exports = {
   updateDislikes,
   removeLike,
   removeDislike,
+  getPreferences,
 };

@@ -1,18 +1,49 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import React from "react";
 import styled from "styled-components";
+import { useContext } from "react";
+import { UserContext } from "./UserContext";
+import { useEffect, useState } from "react";
+import MealCard from "./MealCard";
+import LikedDishes from "./LikedDishes";
 
-const Profile = ({ userId }) => {
+const Profile = () => {
   const { user, isAuthenticated } = useAuth0();
-  console.log("user id:", user.sub);
-  console.log("user", user);
+  const { userId } = useContext(UserContext);
+  const [userPreferences, setUserPreferences] = useState({});
+
+  useEffect(() => {
+    fetch(`/preferences/${userId}`).then((res) => {
+      res
+        .json()
+        .then((data) => {
+          setUserPreferences(data.data);
+        })
+        .catch((e) => console.log("got error", e));
+    });
+  }, [userId]);
+
+  console.log(userPreferences);
+
   return (
-    isAuthenticated && (
+    isAuthenticated &&
+    userPreferences &&
+    userPreferences.likes &&
+    user && (
       <Wrapper>
         <Container>
           <div>{user.name}</div>
           <div>{user.email}</div>
           <img src={user.picture}></img>
+          {userPreferences.likes.map((like, index) => {
+            return (
+              <>
+                <div key={index}>
+                  <LikedDishes like={like} />
+                </div>
+              </>
+            );
+          })}
         </Container>
       </Wrapper>
     )
