@@ -16,8 +16,7 @@ const getRandomRecipes = async (req, res) => {
   try {
     const result = JSON.parse(
       await request(
-        `https://api.spoonacular.com/recipes/random?apiKey=${API_KEY}&tags=main course&number=10`,
-        // `https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY}&type=main course&number=1&addRecipeInformation=true`,
+        `https://api.spoonacular.com/recipes/random?apiKey=${API_KEY}&tags=main course&number=3`,
         {
           headers: { "Content-Type": "application/json" },
         }
@@ -48,7 +47,7 @@ const filteredRecipes = async (req, res) => {
     newIngredients = newIngredients.join();
     const result = JSON.parse(
       await request(
-        `https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY}&includeIngredients=${newIngredients}&ignorePantry=true&instructionsRequired=true&addRecipeInformation=true&number=5&diet=${diet[0]}&cuisine=${cuisine[0]}`,
+        `https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY}&includeIngredients=${newIngredients}&ignorePantry=true&instructionsRequired=true&addRecipeInformation=true&number=20&diet=${diet[0]}&cuisine=${cuisine[0]}`,
         {
           headers: { "Content-Type": "application/json" },
         }
@@ -113,7 +112,7 @@ const getDietaryRecipes = async (req, res) => {
     const randomDiet = dietValues[randomNumber];
     const result = JSON.parse(
       await request(
-        `https://api.spoonacular.com/recipes/random?apiKey=${API_KEY}&tags=${randomDiet}&number=0`,
+        `https://api.spoonacular.com/recipes/random?apiKey=${API_KEY}&tags=${randomDiet}&number=6`,
         {
           headers: { "Content-Type": "application/json" },
         }
@@ -153,7 +152,7 @@ const getCuisineRecipes = async (req, res) => {
     const randomCuisine = cuisineValues[randomNumber];
     const result = JSON.parse(
       await request(
-        `https://api.spoonacular.com/recipes/random?apiKey=${API_KEY}&tags=${randomCuisine}&number=0`,
+        `https://api.spoonacular.com/recipes/random?apiKey=${API_KEY}&tags=${randomCuisine}&number=6`,
         {
           headers: { "Content-Type": "application/json" },
         }
@@ -295,6 +294,7 @@ const getPreferences = async (req, res) => {
     const db = client.db("CheckPlz");
     const id = req.params.id;
     const newId = id.slice(1, id.length - 1);
+    console.log(newId);
     const result = await db.collection("Users").findOne({ _id: newId });
     res.status(200).json({ status: 200, message: "User found", data: result });
   } catch (err) {

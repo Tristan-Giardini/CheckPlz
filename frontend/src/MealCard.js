@@ -86,59 +86,56 @@ const MealCard = ({ recipe, userPreferences }) => {
     }
   };
 
-  if (!userPreferences) {
-    return <h1>Loading...</h1>;
-  } else {
-    return (
-      <>
-        {/* {userPreferences.likes.forEach((item) => {
+  return (
+    <>
+      {/* {userPreferences.likes.forEach((item) => {
           if (item === recipe.id) {
             setIsLiked(true);
           }
         })} */}
-        {/* <Body> */}
-        {/* <Wrapper> */}
-        {/* <Gross>Gross</Gross> */}
-        <Emojis>
-          <Dislike
-            onClick={handleDislike}
-            isLiked={isLiked}
-            isDisliked={isDisliked}
-          >
-            🤢
-          </Dislike>
-          <Like onClick={handleLike} isLiked={isLiked} isDisliked={isDisliked}>
-            😍
-          </Like>
-        </Emojis>
-        <Container isLiked={isLiked} isDisliked={isDisliked}>
-          <StyledNavLink to={`/recipe/${recipe.id}`}>
-            <img src={recipe.image} />
-            <Title>{recipe.title}</Title>
-          </StyledNavLink>
-          <div>Serves {recipe.servings}</div>
-          <div>Ready in {recipe.readyInMinutes} minutes</div>
-        </Container>
-        {/* </Wrapper> */}
-        {/* </Body> */}
-      </>
-    );
-  }
+      {/* <Body> */}
+      {/* <Wrapper> */}
+      {/* <Gross>Gross</Gross> */}
+      <Emojis>
+        <Dislike
+          onClick={handleDislike}
+          isLiked={isLiked}
+          isDisliked={isDisliked}
+        >
+          🤢
+        </Dislike>
+        <Like onClick={handleLike} isLiked={isLiked} isDisliked={isDisliked}>
+          😍
+        </Like>
+      </Emojis>
+      <Container isLiked={isLiked} isDisliked={isDisliked}>
+        <StyledNavLink to={`/recipe/${recipe.id}`}>
+          <img src={recipe.image} />
+          <Title>{recipe.title}</Title>
+        </StyledNavLink>
+        <div>Serves {recipe.servings}</div>
+        <div>Ready in {recipe.readyInMinutes} minutes</div>
+      </Container>
+      {/* </Wrapper> */}
+      {/* </Body> */}
+    </>
+  );
 };
 
 const Container = styled.div`
+  box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
   position: relative;
   border-style: solid;
   border-width: 1px;
   border-color: var(--off-white);
   background-color: ${(props) =>
-    props.isLiked ? "red" : props.isDisliked ? "lightgreen" : ""};
+    props.isLiked ? "red" : props.isDisliked ? "lightgreen" : "white"};
   width: 255px;
   height: 300px;
   display: flex;
   flex-direction: column;
   padding: 20px;
-  margin: 30px;
+  margin: 10px;
   border-radius: 10px;
   opacity: ${(props) => (props.isDisliked ? "50%" : "")};
   img {

@@ -6,7 +6,7 @@ import React from "react";
 const LogoutButton = () => {
   const { logout, isAuthenticated } = useAuth0();
 
-  return isAuthenticated && <Button onClick={() => logout()}> Sign Out</Button>;
+  return isAuthenticated && <Button onClick={() => logout()}>Sign Out</Button>;
 };
 
 const Button = styled.button`

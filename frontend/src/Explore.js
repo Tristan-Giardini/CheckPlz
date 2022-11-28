@@ -5,23 +5,29 @@ import MealCard from "./MealCard";
 import Carousel from "styled-components-carousel";
 import styled from "styled-components";
 import { UserContext } from "./UserContext";
+import Svg from "./assets/bottomwave.svg";
+import { GiConsoleController } from "react-icons/gi";
 
-const Explore = ({ likedRecipes, dislikedRecipes, userPreferences }) => {
+const Explore = ({ likedRecipes, dislikedRecipes }) => {
   const [randomRecipes, setRandomRecipes] = useState(null);
   const [cuisineRecipes, setCuisineRecipes] = useState(null);
   const [dietRecipes, setDietRecipes] = useState(null);
   const [cuisine, setCuisine] = useState(null);
   const [diet, setDiet] = useState(null);
   const { userId, user } = useContext(UserContext);
+  const [userPreferences, setUserPreferences] = useState(null);
 
-  useEffect(() => {
-    fetch("/random-recipes").then((res) => {
+  useEffect(async () => {
+    if (!userId) {
+      return;
+    }
+    await fetch("/random-recipes").then((res) => {
       res
         .json()
         .then((data) => setRandomRecipes(data.data.recipes))
         .catch((e) => console.log("got error", e));
     });
-    fetch("/cuisine-recipes").then((res) => {
+    await fetch("/cuisine-recipes").then((res) => {
       res
         .json()
         .then((data) => {
@@ -30,7 +36,7 @@ const Explore = ({ likedRecipes, dislikedRecipes, userPreferences }) => {
         })
         .catch((e) => console.log("got error", e));
     });
-    fetch("/dietary-recipes").then((res) => {
+    await fetch("/dietary-recipes").then((res) => {
       res
         .json()
         .then((data) => {
@@ -39,7 +45,19 @@ const Explore = ({ likedRecipes, dislikedRecipes, userPreferences }) => {
         })
         .catch((e) => console.log("got error", e));
     });
-  }, []);
+  }, [userId]);
+
+  useEffect(() => {
+    fetch(`/preferences/${userId}`).then((res) => {
+      res
+        .json()
+        .then((data) => {
+          console.log(data);
+          setUserPreferences(data.data);
+        })
+        .catch((e) => console.log("got error", e));
+    });
+  }, [userId]);
 
   if (!randomRecipes || !dietRecipes || !cuisineRecipes) {
     return <h1>Loading...</h1>;
@@ -98,6 +116,9 @@ const Explore = ({ likedRecipes, dislikedRecipes, userPreferences }) => {
             </Carousel>
           </Container>
         </Wrapper>
+        {/* <Wave>
+          <img src={Svg}></img>
+        </Wave> */}
       </BackgroundDiv>
     );
   }
@@ -112,10 +133,20 @@ const Wrapper = styled.div`
   margin-right: 50px;
   display: flex;
   flex-direction: column;
-  margin-left: 215px;
-  margin-right: 215px;
+  margin-left: 175px;
+  margin-right: 175px;
   background-color: white;
+  height: 643px;
+  overflow: hidden;
+  overflow-y: scroll;
+  ::-webkit-scrollbar {
+    display: none;
+  }
 `;
+
+// const Wave = styled.div`
+//   margin-top: -300px;
+// `;
 
 const Container = styled.div`
   height: 500px;

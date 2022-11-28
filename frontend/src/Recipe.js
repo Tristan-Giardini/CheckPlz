@@ -45,7 +45,7 @@ const Recipe = () => {
     setIsEditOpen(false);
   };
 
-  if (!recipe || !similarRecipes) {
+  if (!recipe || !similarRecipes || !recipe.extendedIngredients) {
     return <h1>Loading...</h1>;
   } else {
     return (
@@ -154,6 +154,12 @@ const Source = styled.div`
 const Wrapper = styled.div`
   margin: 0px 215px 0px 215px;
   background-color: white;
+  height: 643px;
+  overflow: hidden;
+  overflow-y: scroll;
+  ::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 const ServesReady = styled.div`
