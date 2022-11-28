@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import MealCard from "./MealCard";
 import styled from "styled-components";
-import Image from "./assets/Groceries-960.jpeg";
+import chefcooking from "./assets/chefcooking.png";
+import chefcooking2 from "./assets/chefcooking2.png";
 import Svg from "./assets/wave.svg";
 import plate from "./assets/plate.png";
-import produce from "./assets/produceleft.png";
+import produce from "./assets/Produce2.png";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useContext } from "react";
 import { UserContext } from "./UserContext";
@@ -43,10 +43,12 @@ const Homepage = () => {
       <div>
         <img src={Svg}></img>
       </div>
-      <ImageDiv>
-        <Produce src={produce}></Produce>
-        <Plate src={plate}></Plate>
-      </ImageDiv>
+      <TagLine>Turn your scraps...</TagLine>
+      <ChefCooking src={chefcooking}></ChefCooking>
+      <ChefCooking2 src={chefcooking2}></ChefCooking2>
+      <Produce src={produce}></Produce>
+      <Plate src={plate}></Plate>
+      <TagLine2>...into snacks!</TagLine2>
     </Wrapper>
   );
 };
@@ -61,22 +63,52 @@ const Wrapper = styled.div`
   }
 `;
 
-const ImageDiv = styled.div`
-  display: flex;
-  flex-direction: row;
+const Produce = styled.img`
+  margin-top: 180px;
+  max-width: 50%;
+  position: absolute;
+  overflow: hidden;
+  z-index: -1;
 `;
 
-const Produce = styled.img`
-  margin-top: -50px;
-  max-width: 50%;
-  clip-path: inset(0 0 260px 0);
+const ChefCooking = styled.img`
+  max-width: 30%;
+  position: absolute;
+  left: 325px;
+  top: 75px;
+`;
+
+const ChefCooking2 = styled.img`
+  max-width: 30%;
+  position: absolute;
+  left: 670px;
+  top: 275px;
+  transform: scaleX(-1);
 `;
 
 const Plate = styled.img`
   max-width: 25%;
   position: absolute;
-  margin-left: 1000px;
-  margin-top: 140px;
+  margin-left: 965px;
+  margin-top: 100px;
+`;
+
+const TagLine = styled.div`
+  font-family: "Caveat", serif;
+  z-index: 3000;
+  position: absolute;
+  top: 115px;
+  left: 100px;
+  font-size: 50px;
+`;
+
+const TagLine2 = styled.div`
+  font-family: "Caveat", serif;
+  z-index: 3000;
+  position: absolute;
+  font-size: 50px;
+  top: 600px;
+  left: 1100px;
 `;
 
 export default Homepage;
