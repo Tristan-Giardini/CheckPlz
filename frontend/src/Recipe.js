@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import SimilarRecipeCard from "./SimilarRecipeCard";
+import { BiEdit } from "react-icons/bi";
+import { Link } from "react-router-dom";
 
 const Recipe = () => {
   const { id } = useParams();
@@ -59,7 +61,16 @@ const Recipe = () => {
               <ImageDiv>
                 <img src={recipe.image}></img>
               </ImageDiv>
-              <Source>Source: {recipe.sourceUrl}</Source>
+              <Source>
+                Source:{" "}
+                <a
+                  href={`${recipe.sourceUrl}`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {recipe.sourceUrl}
+                </a>
+              </Source>
               <ServesReady>
                 <Serves>
                   <h2>Serves {recipe.servings}</h2>
@@ -71,6 +82,7 @@ const Recipe = () => {
             </ImageSourceServing>
             <>
               <SimilarContainer>
+                <h1>Similar Recipes:</h1>
                 {similarRecipes.map((recipe) => {
                   return (
                     <>
@@ -87,36 +99,38 @@ const Recipe = () => {
               {recipe.extendedIngredients.map((ingredient, index) => {
                 return (
                   <>
-                    <div>{ingredient.original}</div>
-                    {!isEditOpen && (
-                      <button
-                        onClick={() => {
-                          editHandler(index, ingredient.original);
-                        }}
-                      >
-                        Edit
-                      </button>
-                    )}
+                    <IngredientButton>
+                      {ingredient.original}
+                      {!isEditOpen && (
+                        <EditButton
+                          onClick={() => {
+                            editHandler(index, ingredient.original);
+                          }}
+                        >
+                          <BiEdit />
+                        </EditButton>
+                      )}
+                    </IngredientButton>
                     {isEditOpen && index === editIndex && (
-                      <>
+                      <EditSave>
                         <textarea
                           name={ingredient.original}
                           id={ingredient.original}
-                          cols="30"
-                          rows="10"
+                          cols="26"
+                          rows="3"
                           value={updatedIngredient}
                           onChange={(e) => {
                             setUpdatedIngredient(e.target.value);
                           }}
                         ></textarea>
-                        <button
+                        <SaveButton
                           onClick={() => {
                             saveHandler(ingredient.id);
                           }}
                         >
                           Save
-                        </button>
-                      </>
+                        </SaveButton>
+                      </EditSave>
                     )}
                   </>
                 );
@@ -144,11 +158,18 @@ const BackgroundDiv = styled.div`
 `;
 
 const Source = styled.div`
-  font-size: 15px;
+  font-size: 14px;
   max-width: 550px;
   align-self: flex-start;
   margin-left: 20px;
   padding: 5px;
+  a {
+    text-decoration: none;
+    color: black;
+    :hover {
+      text-decoration: underline;
+    }
+  }
 `;
 
 const Wrapper = styled.div`
@@ -174,16 +195,16 @@ const ServesReady = styled.div`
 const Serves = styled.div`
   border-top: 1px solid var(--select-grey);
   border-right: 1px solid var(--select-grey);
-  border-bottom: 1px solid var(--select-grey);
+  border-bottom: 0px solid var(--select-grey);
   padding: 15px;
-  width: 250px;
+  width: 248px;
   font-style: italic;
 `;
 
 const Ready = styled.div`
   border-top: 1px solid var(--select-grey);
-  border-left: 1px solid var(--select-grey);
-  border-bottom: 1px solid var(--select-grey);
+  border-left: 0px solid var(--select-grey);
+  border-bottom: 0px solid var(--select-grey);
   padding: 15px;
   width: 250px;
   font-style: italic;
@@ -219,10 +240,11 @@ const ImageDiv = styled.div`
 const Ingredients = styled.div`
   div {
     padding: 15px;
-    border-bottom: 2px solid var(--select-grey);
     font-size: 20px;
+    border-bottom: 2px solid var(--select-grey);
   }
-  width: 1000px;
+  border-right: 2px solid var(--select-grey);
+  max-width: 800px;
   margin-left: 15px;
   h1 {
     padding-top: 15px;
@@ -235,7 +257,6 @@ const Directions = styled.div`
     border-bottom: 2px solid var(--select-grey);
     font-size: 20px;
   }
-  margin-left: 107.7px;
   h1 {
     padding: 15px;
   }
@@ -254,6 +275,53 @@ const IngredientsDirections = styled.div`
   }
 `;
 
-const SimilarContainer = styled.div``;
+const IngredientButton = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-content: space-between;
+  width: 228px;
+  position: relative;
+`;
+
+const EditButton = styled.button`
+  background: none;
+  border: none;
+  :hover {
+    cursor: pointer;
+  }
+  font-size: 16px;
+  color: lightgrey;
+  position: absolute;
+  margin-left: 210px;
+`;
+
+const EditSave = styled.div`
+  display: flex;
+  align-items: flex-end;
+  flex-direction: column;
+`;
+
+const SaveButton = styled.button`
+  background: none;
+  border: none;
+  :hover {
+    cursor: pointer;
+  }
+  display: flex;
+`;
+
+const SimilarContainer = styled.div`
+  h1 {
+    margin-bottom: 20px;
+  }
+  border-bottom: 1px solid var(--select-grey);
+  overflow: hidden;
+  height: 380px;
+  width: 295px;
+  overflow-y: scroll;
+  ::-webkit-scrollbar {
+    display: none;
+  }
+`;
 
 export default Recipe;

@@ -6,11 +6,11 @@ export default createGlobalStyle`
 		--light-purple: #8f2ed6;
 		--pink: #ffa69e;
 		--darker-pink: #e5989b;
-		--beige: #faf3dd;
-		--slate: #aed9e0;
 		--select-grey: #fff4f4;
 		--off-white: #edf6f9;
 		--light-brown: #e29578;
+		--like-red: #E15052;
+		--dislike-green: #94C74B;
 		--font-body: 'Tajawal', sans-serif;
 	}
 

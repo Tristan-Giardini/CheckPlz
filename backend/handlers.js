@@ -12,11 +12,27 @@ const options = {
 
 const client = new MongoClient(MONGO_URI, options);
 
+let clientDB = null;
+let timeOut = 0;
+const getClientDB = async () => {
+  clearTimeout(timeOut);
+  if (!clientDB) {
+    const client = new MongoClient(MONGO_URI, options);
+    await client.connect();
+    clientDB = await client.db("CheckPlz");
+  }
+  timeOut = setTimeout(() => {
+    client.close();
+    clientDB = null;
+  }, 5000);
+  return clientDB;
+};
+
 const getRandomRecipes = async (req, res) => {
   try {
     const result = JSON.parse(
       await request(
-        `https://api.spoonacular.com/recipes/random?apiKey=${API_KEY}&tags=main course&number=3`,
+        `https://api.spoonacular.com/recipes/random?apiKey=${API_KEY}&tags=main course&number=5`,
         {
           headers: { "Content-Type": "application/json" },
         }
@@ -33,9 +49,9 @@ const getRandomRecipes = async (req, res) => {
 
 const filteredRecipes = async (req, res) => {
   try {
-    const cuisine = req.body.cuisine;
-    const diet = req.body.diet;
-    const ingredients = req.body.ingredients;
+    let cuisine = req.body.cuisine;
+    let diet = req.body.diet;
+    let ingredients = req.body.ingredients;
     let newIngredients = [];
     ingredients[0].split(",").forEach((item, index) => {
       if (index === 0) {
@@ -85,7 +101,7 @@ const getSimilarRecipes = async (req, res) => {
     const id = req.params.id;
     const result = JSON.parse(
       await request(
-        `https://api.spoonacular.com/recipes/${id}/similar?apiKey=${API_KEY}&number=3`,
+        `https://api.spoonacular.com/recipes/${id}/similar?apiKey=${API_KEY}&number=10`,
         {
           headers: { "Content-Type": "application/json" },
         }
@@ -112,7 +128,7 @@ const getDietaryRecipes = async (req, res) => {
     const randomDiet = dietValues[randomNumber];
     const result = JSON.parse(
       await request(
-        `https://api.spoonacular.com/recipes/random?apiKey=${API_KEY}&tags=${randomDiet}&number=6`,
+        `https://api.spoonacular.com/recipes/random?apiKey=${API_KEY}&tags=${randomDiet}&number=5`,
         {
           headers: { "Content-Type": "application/json" },
         }
@@ -152,7 +168,7 @@ const getCuisineRecipes = async (req, res) => {
     const randomCuisine = cuisineValues[randomNumber];
     const result = JSON.parse(
       await request(
-        `https://api.spoonacular.com/recipes/random?apiKey=${API_KEY}&tags=${randomCuisine}&number=6`,
+        `https://api.spoonacular.com/recipes/random?apiKey=${API_KEY}&tags=${randomCuisine}&number=5`,
         {
           headers: { "Content-Type": "application/json" },
         }
@@ -172,8 +188,9 @@ const getCuisineRecipes = async (req, res) => {
 
 const handleUser = async (req, res) => {
   try {
-    await client.connect();
-    const db = client.db("CheckPlz");
+    // await client.connect();
+    // const db = client.db("CheckPlz");
+    const db = await getClientDB();
     const { _id, given_name, family_name, email } = req.body;
     const userValues = {
       _id: _id,
@@ -205,22 +222,23 @@ const handleUser = async (req, res) => {
   } catch (err) {
     console.log(err);
   } finally {
-    client.close();
+    // client.close();
   }
 };
 
 const updateLikes = async (req, res) => {
   try {
-    await client.connect();
-    const db = client.db("CheckPlz");
+    // await client.connect();
+    // const db = client.db("CheckPlz");
+    const db = await getClientDB();
     const { id, recipe } = req.body;
-    const newId = id.slice(1, id.length - 1);
+    // const newId = id.slice(1, id.length - 1);
     await db
       .collection("Users")
-      .updateOne({ _id: newId }, { $pull: { dislikes: recipe } });
+      .updateOne({ _id: id }, { $pull: { dislikes: recipe } });
     const result = await db
       .collection("Users")
-      .updateOne({ _id: newId }, { $addToSet: { likes: recipe } });
+      .updateOne({ _id: id }, { $addToSet: { likes: recipe } });
     if (result) {
       res
         .status(200)
@@ -229,78 +247,81 @@ const updateLikes = async (req, res) => {
   } catch (err) {
     res.status(400).json({ status: 400, message: "Could not update likes" });
   } finally {
-    client.close();
+    // client.close();
   }
 };
 
 const removeLike = async (req, res) => {
   try {
-    await client.connect();
-    const db = client.db("CheckPlz");
+    // await client.connect();
+    // const db = client.db("CheckPlz");
+    const db = await getClientDB();
     const { id, recipe } = req.body;
-    const newId = id.slice(1, id.length - 1);
+    // const newId = id.slice(1, id.length - 1);
     await db
       .collection("Users")
-      .updateOne({ _id: newId }, { $pull: { likes: recipe } });
+      .updateOne({ _id: id }, { $pull: { likes: recipe } });
     res.status(200).json({ status: 200, message: "Like removed!" });
   } catch (err) {
     res.status(400).json({ status: 400, message: "Could not update likes" });
   } finally {
-    client.close();
+    // client.close();
   }
 };
 
 const removeDislike = async (req, res) => {
   try {
-    await client.connect();
-    const db = client.db("CheckPlz");
+    // await client.connect();
+    // const db = client.db("CheckPlz");
+    const db = await getClientDB();
     const { id, recipe } = req.body;
-    const newId = id.slice(1, id.length - 1);
+    // const newId = id.slice(1, id.length - 1);
     await db
       .collection("Users")
-      .updateOne({ _id: newId }, { $pull: { dislikes: recipe } });
+      .updateOne({ _id: id }, { $pull: { dislikes: recipe } });
     res.status(200).json({ status: 200, message: "Dislike removed!" });
   } catch (err) {
     res.status(400).json({ status: 400, message: "Could not update likes" });
   } finally {
-    client.close();
+    // client.close();
   }
 };
 
 const updateDislikes = async (req, res) => {
   try {
-    await client.connect();
-    const db = client.db("CheckPlz");
+    // await client.connect();
+    // const db = client.db("CheckPlz");
+    const db = await getClientDB();
     const { id, recipe } = req.body;
-    const newId = id.slice(1, id.length - 1);
+    // const newId = id.slice(1, id.length - 1);
     const recipeNum = Number(recipe);
     await db
       .collection("Users")
-      .updateOne({ _id: newId }, { $pull: { likes: recipeNum } });
+      .updateOne({ _id: id }, { $pull: { likes: recipeNum } });
     await db
       .collection("Users")
-      .updateOne({ _id: newId }, { $addToSet: { dislikes: recipeNum } });
+      .updateOne({ _id: id }, { $addToSet: { dislikes: recipeNum } });
     res.status(200).json({ status: 200, message: "Dislike added" });
   } catch (err) {
     res.status(400).json({ status: 400, message: "Could not update dislikes" });
   } finally {
-    client.close();
+    // client.close();
   }
 };
 
 const getPreferences = async (req, res) => {
   try {
-    await client.connect();
-    const db = client.db("CheckPlz");
+    // await client.connect();
+    // const db = client.db("CheckPlz");
+    const db = await getClientDB();
     const id = req.params.id;
-    const newId = id.slice(1, id.length - 1);
-    console.log(newId);
-    const result = await db.collection("Users").findOne({ _id: newId });
+    console.log(id);
+    const result = await db.collection("Users").findOne({ _id: id });
     res.status(200).json({ status: 200, message: "User found", data: result });
   } catch (err) {
     res.status(400).json({ status: 400, message: "Could not find user" });
   } finally {
-    client.close();
+    // client.close();
   }
 };
 

@@ -5,10 +5,12 @@ import { useState } from "react";
 import { UserContext } from "./UserContext";
 import { useContext } from "react";
 
-const MealCard = ({ recipe, userPreferences }) => {
+const MealCard = ({ recipe, like, dislike }) => {
   const { user } = useAuth0();
-  const [isLiked, setIsLiked] = useState(false);
-  const [isDisliked, setIsDisliked] = useState(false);
+  const [isLiked, setIsLiked] = useState(like.some((id) => id === recipe.id));
+  const [isDisliked, setIsDisliked] = useState(
+    dislike.some((id) => id === recipe.id)
+  );
   const { userId } = useContext(UserContext);
 
   const likes = { recipe: recipe.id, id: userId };
@@ -86,29 +88,32 @@ const MealCard = ({ recipe, userPreferences }) => {
     }
   };
 
+  // if (!like) {
+  //   return <h1>Loading...</h1>;
+  // } else {
   return (
     <>
-      {/* {userPreferences.likes.forEach((item) => {
+      {/* {like.forEach((item) => {
           if (item === recipe.id) {
             setIsLiked(true);
           }
         })} */}
       {/* <Body> */}
       {/* <Wrapper> */}
-      {/* <Gross>Gross</Gross> */}
-      <Emojis>
-        <Dislike
-          onClick={handleDislike}
-          isLiked={isLiked}
-          isDisliked={isDisliked}
-        >
-          🤢
-        </Dislike>
-        <Like onClick={handleLike} isLiked={isLiked} isDisliked={isDisliked}>
-          😍
-        </Like>
-      </Emojis>
+      {isDisliked ? <Gross>Gross</Gross> : null}
       <Container isLiked={isLiked} isDisliked={isDisliked}>
+        <Emojis>
+          <Dislike
+            onClick={handleDislike}
+            isLiked={isLiked}
+            isDisliked={isDisliked}
+          >
+            🤢
+          </Dislike>
+          <Like onClick={handleLike} isLiked={isLiked} isDisliked={isDisliked}>
+            😍
+          </Like>
+        </Emojis>
         <StyledNavLink to={`/recipe/${recipe.id}`}>
           <img src={recipe.image} />
           <Title>{recipe.title}</Title>
@@ -121,6 +126,7 @@ const MealCard = ({ recipe, userPreferences }) => {
     </>
   );
 };
+// };
 
 const Container = styled.div`
   box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
@@ -129,7 +135,14 @@ const Container = styled.div`
   border-width: 1px;
   border-color: var(--off-white);
   background-color: ${(props) =>
-    props.isLiked ? "red" : props.isDisliked ? "lightgreen" : "white"};
+    props.isLiked ? "white" : props.isDisliked ? "#94C74B" : "white"};
+  border: ${(props) =>
+    props.isLiked
+      ? "2px solid #E15052"
+      : props.isDisliked
+      ? "#94C74B"
+      : "white"};
+
   width: 255px;
   height: 300px;
   display: flex;
@@ -149,26 +162,23 @@ const Container = styled.div`
   :hover {
     background-color: ${(props) =>
       props.isLiked
-        ? "red"
+        ? "var(--select-grey)"
         : props.isDisliked
-        ? "lightgreen"
+        ? "#94C74B"
         : "var(--select-grey)"};
   }
 `;
 
-// const Gross = styled.div`
-//   position: absolute;
-//   font-family: "Nosifer", cursive;
-//   margin-top: 200px;
-//   margin-left: 30px;
-//   font-size: 60px;
-//   z-index: 2000;
-//   transform: rotate(-30deg);
-//   /* display: ${(props) =>
-//     props.isLiked ? "none" : props.isDisliked ? "inline" : "none"}; */
-//   visibility: ${(props) =>
-//     props.isLiked ? "hidden" : props.isDisliked ? "visible" : "hidden"};
-// `;
+const Gross = styled.div`
+  position: absolute;
+  font-family: "Frijole", cursive;
+  margin-top: 78px;
+  margin-left: 30px;
+  font-size: 60px;
+  z-index: 3000;
+  transform: rotate(-30deg);
+  color: #1d1d1d;
+`;
 
 const LikedContainer = styled.div`
   position: relative;
@@ -242,8 +252,8 @@ const Emojis = styled.div`
   flex-direction: column;
   position: absolute;
   justify-content: space-between;
-  margin-left: 260px;
-  margin-top: 260px;
+  margin-left: 220px;
+  margin-top: 220px;
   div {
     font-size: 30px;
   }

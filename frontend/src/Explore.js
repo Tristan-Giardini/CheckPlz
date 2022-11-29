@@ -8,26 +8,26 @@ import { UserContext } from "./UserContext";
 import Svg from "./assets/bottomwave.svg";
 import { GiConsoleController } from "react-icons/gi";
 
-const Explore = ({ likedRecipes, dislikedRecipes }) => {
+const Explore = () => {
   const [randomRecipes, setRandomRecipes] = useState(null);
   const [cuisineRecipes, setCuisineRecipes] = useState(null);
   const [dietRecipes, setDietRecipes] = useState(null);
   const [cuisine, setCuisine] = useState(null);
   const [diet, setDiet] = useState(null);
   const { userId, user } = useContext(UserContext);
-  const [userPreferences, setUserPreferences] = useState(null);
+  const [userPreferences, setUserPreferences] = useState({});
 
   useEffect(async () => {
-    if (!userId) {
-      return;
-    }
-    await fetch("/random-recipes").then((res) => {
+    // if (!userId) {
+    //   return;
+    // }
+    fetch("/random-recipes").then((res) => {
       res
         .json()
         .then((data) => setRandomRecipes(data.data.recipes))
         .catch((e) => console.log("got error", e));
     });
-    await fetch("/cuisine-recipes").then((res) => {
+    fetch("/cuisine-recipes").then((res) => {
       res
         .json()
         .then((data) => {
@@ -36,7 +36,7 @@ const Explore = ({ likedRecipes, dislikedRecipes }) => {
         })
         .catch((e) => console.log("got error", e));
     });
-    await fetch("/dietary-recipes").then((res) => {
+    fetch("/dietary-recipes").then((res) => {
       res
         .json()
         .then((data) => {
@@ -59,7 +59,13 @@ const Explore = ({ likedRecipes, dislikedRecipes }) => {
     });
   }, [userId]);
 
-  if (!randomRecipes || !dietRecipes || !cuisineRecipes) {
+  if (
+    !randomRecipes ||
+    !dietRecipes ||
+    !cuisineRecipes ||
+    !userPreferences
+    // !userPreferences.likes.length
+  ) {
     return <h1>Loading...</h1>;
   } else {
     return (
@@ -74,7 +80,8 @@ const Explore = ({ likedRecipes, dislikedRecipes }) => {
                   <MealCard
                     key={index}
                     recipe={recipe}
-                    userPreferences={userPreferences}
+                    like={userPreferences.likes}
+                    dislike={userPreferences.dislikes}
                   />
                 );
               })}
@@ -92,7 +99,8 @@ const Explore = ({ likedRecipes, dislikedRecipes }) => {
                   <MealCard
                     key={index}
                     recipe={recipe}
-                    userPreferences={userPreferences}
+                    like={userPreferences.likes}
+                    dislike={userPreferences.dislikes}
                   />
                 );
               })}
@@ -109,7 +117,8 @@ const Explore = ({ likedRecipes, dislikedRecipes }) => {
                   <MealCard
                     key={index}
                     recipe={recipe}
-                    userPreferences={userPreferences}
+                    like={userPreferences.likes}
+                    dislike={userPreferences.dislikes}
                   />
                 );
               })}

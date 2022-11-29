@@ -11,12 +11,13 @@ import { UserContext } from "./UserContext";
 
 const Homepage = () => {
   const { user, isAuthenticated } = useAuth0();
-  const { userId } = useContext(UserContext);
+  const { setUserId } = useContext(UserContext);
   let newUser = {};
 
   if (isAuthenticated) {
     newUser = { ...user, _id: user.sub };
-    sessionStorage.setItem("userId", JSON.stringify(newUser._id));
+    setUserId(newUser._id);
+    sessionStorage.setItem("userId", newUser._id);
   }
 
   useEffect(() => {
