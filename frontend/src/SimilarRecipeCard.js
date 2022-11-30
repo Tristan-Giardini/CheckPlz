@@ -7,7 +7,7 @@ const SimilarRecipeCard = ({ recipe }) => {
   const [recommendedRecipe, setRecommendedRecipe] = useState();
 
   useEffect(() => {
-    fetch(`/single-recipe/${recipe.id}`).then((res) => {
+    fetch(`/single-recipe/${recipe}`).then((res) => {
       res
         .json()
         .then((data) => setRecommendedRecipe(data.data))

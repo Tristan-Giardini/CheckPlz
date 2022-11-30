@@ -3,6 +3,9 @@ import styled from "styled-components";
 import MealCard from "./MealCard";
 import Carousel from "styled-components-carousel";
 import Svg from "./assets/bottomwave.svg";
+import { useContext } from "react";
+import { UserContext } from "./UserContext";
+import { useEffect } from "react";
 
 const ComplexSearch = () => {
   const ref = useRef(null);
@@ -11,6 +14,8 @@ const ComplexSearch = () => {
   const [isDisabled, setIsDisabled] = useState(true);
   const [isDietHidden, setIsDietHidden] = useState(true);
   const [isCuisineHidden, setIsCuisineHidden] = useState(true);
+  const [userPreferences, setUserPreferences] = useState({});
+  const { userId } = useContext(UserContext);
 
   const handleChange = (e) => {
     setFormData({
@@ -18,6 +23,18 @@ const ComplexSearch = () => {
       [e.target.name]: [e.target.value],
     });
   };
+
+  useEffect(() => {
+    fetch(`/preferences/${userId}`).then((res) => {
+      res
+        .json()
+        .then((data) => {
+          console.log(data);
+          setUserPreferences(data.data);
+        })
+        .catch((e) => console.log("got error", e));
+    });
+  }, [userId]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -38,6 +55,9 @@ const ComplexSearch = () => {
   const handleKeyDown = () => {
     setIsDisabled(false);
   };
+
+  const like = false;
+  const dislike = false;
 
   return (
     <>
@@ -275,7 +295,14 @@ const ComplexSearch = () => {
                 <h1>Results</h1>
                 <MealCardWrapper>
                   {filteredRecipes.map((recipe, index) => {
-                    return <MealCard key={index} recipe={recipe} />;
+                    return (
+                      <MealCard
+                        key={index}
+                        recipe={recipe}
+                        like={userPreferences.likes}
+                        dislike={userPreferences.dislikes}
+                      />
+                    );
                   })}
                 </MealCardWrapper>
               </Container>
@@ -298,6 +325,7 @@ const BackgroundDiv = styled.div`
 `;
 
 const TextInput = styled.input`
+  box-shadow: 0 0 5pt 0.5pt #d3d3d3;
   appearance: none;
   outline: none;
   border: none;

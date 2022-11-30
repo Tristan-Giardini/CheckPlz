@@ -32,7 +32,7 @@ const getRandomRecipes = async (req, res) => {
   try {
     const result = JSON.parse(
       await request(
-        `https://api.spoonacular.com/recipes/random?apiKey=${API_KEY}&tags=main course&number=5`,
+        `https://api.spoonacular.com/recipes/random?apiKey=${API_KEY}&tags=main course&number=1`,
         {
           headers: { "Content-Type": "application/json" },
         }
@@ -63,7 +63,7 @@ const filteredRecipes = async (req, res) => {
     newIngredients = newIngredients.join();
     const result = JSON.parse(
       await request(
-        `https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY}&includeIngredients=${newIngredients}&ignorePantry=true&instructionsRequired=true&addRecipeInformation=true&number=20&diet=${diet[0]}&cuisine=${cuisine[0]}`,
+        `https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY}&includeIngredients=${newIngredients}&ignorePantry=true&instructionsRequired=true&addRecipeInformation=true&number=1&diet=${diet[0]}&cuisine=${cuisine[0]}`,
         {
           headers: { "Content-Type": "application/json" },
         }
@@ -101,7 +101,7 @@ const getSimilarRecipes = async (req, res) => {
     const id = req.params.id;
     const result = JSON.parse(
       await request(
-        `https://api.spoonacular.com/recipes/${id}/similar?apiKey=${API_KEY}&number=10`,
+        `https://api.spoonacular.com/recipes/${id}/similar?apiKey=${API_KEY}&number=1`,
         {
           headers: { "Content-Type": "application/json" },
         }
@@ -128,7 +128,7 @@ const getDietaryRecipes = async (req, res) => {
     const randomDiet = dietValues[randomNumber];
     const result = JSON.parse(
       await request(
-        `https://api.spoonacular.com/recipes/random?apiKey=${API_KEY}&tags=${randomDiet}&number=5`,
+        `https://api.spoonacular.com/recipes/random?apiKey=${API_KEY}&tags=${randomDiet}&number=1`,
         {
           headers: { "Content-Type": "application/json" },
         }
@@ -168,7 +168,7 @@ const getCuisineRecipes = async (req, res) => {
     const randomCuisine = cuisineValues[randomNumber];
     const result = JSON.parse(
       await request(
-        `https://api.spoonacular.com/recipes/random?apiKey=${API_KEY}&tags=${randomCuisine}&number=5`,
+        `https://api.spoonacular.com/recipes/random?apiKey=${API_KEY}&tags=${randomCuisine}&number=1`,
         {
           headers: { "Content-Type": "application/json" },
         }
@@ -197,6 +197,7 @@ const handleUser = async (req, res) => {
       given_name: given_name,
       family_name: family_name,
       email: email,
+      edits: [],
     };
     const users = await db.collection("Users").find().toArray();
 
@@ -232,10 +233,12 @@ const updateLikes = async (req, res) => {
     // const db = client.db("CheckPlz");
     const db = await getClientDB();
     const { id, recipe } = req.body;
-    // const newId = id.slice(1, id.length - 1);
     await db
       .collection("Users")
       .updateOne({ _id: id }, { $pull: { dislikes: recipe } });
+    await db
+      .collection("Users")
+      .update({ _id: id }, { $push: { edits: { recipe } } });
     const result = await db
       .collection("Users")
       .updateOne({ _id: id }, { $addToSet: { likes: recipe } });
@@ -261,6 +264,9 @@ const removeLike = async (req, res) => {
     await db
       .collection("Users")
       .updateOne({ _id: id }, { $pull: { likes: recipe } });
+    await db
+      .collection("Users")
+      .update({ _id: id }, { $pull: { edits: { recipeId: recipe } } });
     res.status(200).json({ status: 200, message: "Like removed!" });
   } catch (err) {
     res.status(400).json({ status: 400, message: "Could not update likes" });
@@ -300,6 +306,9 @@ const updateDislikes = async (req, res) => {
       .updateOne({ _id: id }, { $pull: { likes: recipeNum } });
     await db
       .collection("Users")
+      .update({ _id: id }, { $pull: { edits: { recipeId: recipe } } });
+    await db
+      .collection("Users")
       .updateOne({ _id: id }, { $addToSet: { dislikes: recipeNum } });
     res.status(200).json({ status: 200, message: "Dislike added" });
   } catch (err) {
@@ -325,6 +334,27 @@ const getPreferences = async (req, res) => {
   }
 };
 
+const updateIngredient = async (req, res) => {
+  const db = await getClientDB();
+  const { _id, ingredientId, ingredient, recipeId } = req.body;
+  const query = { _id: _id };
+  const ingredientInfo = {
+    ingredientId: ingredientId,
+    ingredient: ingredient,
+  };
+  console.log(query);
+  const result = await db
+    .collection("Users")
+    .updateOne(query, { $addToSet: { edits } }, { upsert: true });
+  if (result) {
+    res.status(200).json({ status: 200, data: result });
+  } else {
+    res
+      .status(400)
+      .json({ status: 400, message: "Could not update ingredients" });
+  }
+};
+
 module.exports = {
   filteredRecipes,
   getRandomRecipes,
@@ -338,4 +368,5 @@ module.exports = {
   removeLike,
   removeDislike,
   getPreferences,
+  updateIngredient,
 };

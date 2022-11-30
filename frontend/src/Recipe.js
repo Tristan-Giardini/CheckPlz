@@ -14,7 +14,6 @@ const Recipe = () => {
   const [editIndex, setEditIndex] = useState(0);
   const [isEditOpen, setIsEditOpen] = useState(false);
 
-  console.log("recipe", recipe);
   useEffect(() => {
     fetch(`/single-recipe/${id}`).then((res) => {
       res
@@ -46,6 +45,8 @@ const Recipe = () => {
     setRecipe(newRecipe);
     setIsEditOpen(false);
   };
+
+  console.log("recipe", recipe);
 
   if (!recipe || !similarRecipes || !recipe.extendedIngredients) {
     return <h1>Loading...</h1>;
@@ -83,10 +84,10 @@ const Recipe = () => {
             <>
               <SimilarContainer>
                 <h1>Similar Recipes:</h1>
-                {similarRecipes.map((recipe) => {
+                {similarRecipes.map((recipe, index) => {
                   return (
                     <>
-                      <SimilarRecipeCard recipe={recipe} />
+                      <SimilarRecipeCard key={index} recipe={recipe.id} />
                     </>
                   );
                 })}
@@ -138,10 +139,10 @@ const Recipe = () => {
             </Ingredients>
             <Directions>
               <h1>Directions:</h1>
-              {recipe.analyzedInstructions[0].steps.map((item) => {
+              {recipe.analyzedInstructions[0].steps.map((item, index) => {
                 return (
                   <>
-                    <div>{item.step}</div>
+                    <div key={index}>{item.step}</div>
                   </>
                 );
               })}

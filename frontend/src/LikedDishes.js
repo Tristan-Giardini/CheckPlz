@@ -1,6 +1,7 @@
 import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
+import SimilarRecipeCard from "./SimilarRecipeCard";
 
 const LikedDishes = ({ like }) => {
   const [recipe, setRecipe] = useState();

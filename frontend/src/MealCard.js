@@ -6,11 +6,12 @@ import { UserContext } from "./UserContext";
 import { useContext } from "react";
 
 const MealCard = ({ recipe, like, dislike }) => {
-  const { user } = useAuth0();
   const [isLiked, setIsLiked] = useState(like.some((id) => id === recipe.id));
   const [isDisliked, setIsDisliked] = useState(
     dislike.some((id) => id === recipe.id)
   );
+  // const [isLiked, setIsLiked] = useState(false);
+  // const [isDisliked, setIsDisliked] = useState(false);
   const { userId } = useContext(UserContext);
 
   const likes = { recipe: recipe.id, id: userId };
@@ -89,17 +90,12 @@ const MealCard = ({ recipe, like, dislike }) => {
   };
 
   // if (!like) {
-  //   return <h1>Loading...</h1>;
+  //   <h1>Loading...</h1>;
   // } else {
   return (
     <>
-      {/* {like.forEach((item) => {
-          if (item === recipe.id) {
-            setIsLiked(true);
-          }
-        })} */}
-      {/* <Body> */}
-      {/* <Wrapper> */}
+      {/* {setIsLiked(like.some((id) => id === recipe.id))}
+        {setIsDisliked(dislike.some((id) => id === recipe.id))} */}
       {isDisliked ? <Gross>Gross</Gross> : null}
       <Container isLiked={isLiked} isDisliked={isDisliked}>
         <Emojis>
@@ -121,8 +117,6 @@ const MealCard = ({ recipe, like, dislike }) => {
         <div>Serves {recipe.servings}</div>
         <div>Ready in {recipe.readyInMinutes} minutes</div>
       </Container>
-      {/* </Wrapper> */}
-      {/* </Body> */}
     </>
   );
 };
@@ -178,58 +172,6 @@ const Gross = styled.div`
   z-index: 3000;
   transform: rotate(-30deg);
   color: #1d1d1d;
-`;
-
-const LikedContainer = styled.div`
-  position: relative;
-  border-style: solid;
-  border-width: 1px;
-  border-color: var(--off-white);
-  width: 255px;
-  height: 300px;
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
-  margin: 30px;
-  border-radius: 10px;
-  background-color: red;
-  img {
-    max-width: 250px;
-    border-radius: 10px;
-  }
-  div {
-    padding: 5px;
-  }
-  transition: 1s ease-in-out;
-  :hover {
-    background-color: var(--select-grey);
-  }
-`;
-
-const DislikedContainer = styled.div`
-  position: relative;
-  border-style: solid;
-  border-width: 1px;
-  border-color: var(--off-white);
-  width: 255px;
-  height: 300px;
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
-  margin: 30px;
-  border-radius: 10px;
-  background-color: green;
-  img {
-    max-width: 250px;
-    border-radius: 10px;
-  }
-  div {
-    padding: 5px;
-  }
-  transition: 1s ease-in-out;
-  :hover {
-    background-color: var(--select-grey);
-  }
 `;
 
 const Title = styled.div`

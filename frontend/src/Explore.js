@@ -5,8 +5,6 @@ import MealCard from "./MealCard";
 import Carousel from "styled-components-carousel";
 import styled from "styled-components";
 import { UserContext } from "./UserContext";
-import Svg from "./assets/bottomwave.svg";
-import { GiConsoleController } from "react-icons/gi";
 
 const Explore = () => {
   const [randomRecipes, setRandomRecipes] = useState(null);
@@ -17,10 +15,31 @@ const Explore = () => {
   const { userId, user } = useContext(UserContext);
   const [userPreferences, setUserPreferences] = useState({});
 
-  useEffect(async () => {
-    // if (!userId) {
-    //   return;
-    // }
+  // const handleUserPreferences = () => {
+  //   fetch(`/preferences/${userId}`).then((res) => {
+  //     res
+  //       .json()
+  //       .then((data) => {
+  //         console.log(data);
+  //         setUserPreferences(data.data);
+  //       })
+  //       .catch((e) => console.log("got error", e));
+  //   });
+  // };
+
+  useEffect(() => {
+    fetch(`/preferences/${userId}`).then((res) => {
+      res
+        .json()
+        .then((data) => {
+          console.log(data);
+          setUserPreferences(data.data);
+        })
+        .catch((e) => console.log("got error", e));
+    });
+  }, [userId]);
+
+  useEffect(() => {
     fetch("/random-recipes").then((res) => {
       res
         .json()
@@ -45,26 +64,38 @@ const Explore = () => {
         })
         .catch((e) => console.log("got error", e));
     });
-  }, [userId]);
+  }, [userPreferences]);
 
-  useEffect(() => {
-    fetch(`/preferences/${userId}`).then((res) => {
-      res
-        .json()
-        .then((data) => {
-          console.log(data);
-          setUserPreferences(data.data);
-        })
-        .catch((e) => console.log("got error", e));
-    });
-  }, [userId]);
+  // const handleUserPreferences = () => {
+  //   fetch(`/preferences/${userId}`).then((res) => {
+  //     res
+  //       .json()
+  //       .then((data) => {
+  //         console.log(data);
+  //         setUserPreferences(data.data);
+  //       })
+  //       .catch((e) => console.log("got error", e));
+  //   });
+  // };
+
+  // useEffect(() => {
+  //   fetch(`/preferences/${userId}`).then((res) => {
+  //     res
+  //       .json()
+  //       .then((data) => {
+  //         console.log(data);
+  //         setUserPreferences(data.data);
+  //       })
+  //       .catch((e) => console.log("got error", e));
+  //   });
+  // }, [userId]);
 
   if (
     !randomRecipes ||
     !dietRecipes ||
     !cuisineRecipes ||
-    !userPreferences
-    // !userPreferences.likes.length
+    !userPreferences.likes ||
+    !userPreferences.dislikes
   ) {
     return <h1>Loading...</h1>;
   } else {
@@ -125,9 +156,6 @@ const Explore = () => {
             </Carousel>
           </Container>
         </Wrapper>
-        {/* <Wave>
-          <img src={Svg}></img>
-        </Wave> */}
       </BackgroundDiv>
     );
   }
@@ -152,10 +180,6 @@ const Wrapper = styled.div`
     display: none;
   }
 `;
-
-// const Wave = styled.div`
-//   margin-top: -300px;
-// `;
 
 const Container = styled.div`
   height: 500px;
