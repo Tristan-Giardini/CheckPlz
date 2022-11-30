@@ -198,6 +198,8 @@ const handleUser = async (req, res) => {
       family_name: family_name,
       email: email,
       edits: [],
+      likes: [],
+      dislikes: [],
     };
     const users = await db.collection("Users").find().toArray();
 
@@ -266,6 +268,9 @@ const removeLike = async (req, res) => {
     // const newId = id.slice(1, id.length - 1);
     await db
       .collection("Users")
+      .updateOne({ _id: id }, { $pull: { edits: { recipeId_: recipe } } });
+    await db
+      .collection("Users")
       .updateOne({ _id: id }, { $pull: { likes: recipe } });
     res.status(200).json({ status: 200, message: "Like removed!" });
   } catch (err) {
@@ -304,9 +309,9 @@ const updateDislikes = async (req, res) => {
     await db
       .collection("Users")
       .updateOne({ _id: id }, { $pull: { likes: recipeNum } });
-    // await db
-    //   .collection("Users")
-    //   .update({ _id: id }, { $pull: { edits: { recipeId: recipe } } });
+    await db
+      .collection("Users")
+      .updateOne({ _id: id }, { $pull: { edits: { recipeId_: recipe } } });
     await db
       .collection("Users")
       .updateOne({ _id: id }, { $addToSet: { dislikes: recipeNum } });

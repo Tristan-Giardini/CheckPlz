@@ -57,264 +57,268 @@ const ComplexSearch = () => {
   const like = false;
   const dislike = false;
 
-  return (
-    <>
-      <BackgroundDiv>
-        <Wrapper>
-          <DietButton
-            onClick={() => {
-              setIsDietHidden((prev) => !isDietHidden);
-            }}
-          >
-            {isDietHidden ? "more" : "less"} diets...
-          </DietButton>
-          <CuisineButton
-            onClick={() => {
-              setIsCuisineHidden((prev) => !isCuisineHidden);
-            }}
-          >
-            {isCuisineHidden ? "more" : "less"} cuisines...
-          </CuisineButton>
-          <FormDiv>
-            <Form onSubmit={handleSubmit}>
-              <TextInput
-                type="text"
-                name="ingredients"
-                placeholder="eggs, tomatoes, ..."
-                onChange={handleChange}
-                onKeyDown={handleKeyDown}
-              />
-              <ChoicesDiv>
-                <DietDiv>
-                  <p>Choose Your Diet</p>
-                  <PrimaryDiet>
-                    <input
-                      type="radio"
-                      name="diet"
-                      value="none"
-                      onChange={handleChange}
-                    />
-                    none
-                    <input
-                      type="radio"
-                      name="diet"
-                      value="vegan"
-                      onChange={handleChange}
-                    />
-                    vegan
-                    <input
-                      type="radio"
-                      name="diet"
-                      value="vegetarian"
-                      onChange={handleChange}
-                    />
-                    vegetarian
-                  </PrimaryDiet>
-                  {!isDietHidden ? (
-                    <HiddenDiets>
+  if (!userPreferences.likes || !userPreferences.dislikes) {
+    <h1>Loading...</h1>;
+  } else {
+    return (
+      <>
+        <BackgroundDiv>
+          <Wrapper>
+            <DietButton
+              onClick={() => {
+                setIsDietHidden((prev) => !isDietHidden);
+              }}
+            >
+              {isDietHidden ? "more" : "less"} diets...
+            </DietButton>
+            <CuisineButton
+              onClick={() => {
+                setIsCuisineHidden((prev) => !isCuisineHidden);
+              }}
+            >
+              {isCuisineHidden ? "more" : "less"} cuisines...
+            </CuisineButton>
+            <FormDiv>
+              <Form onSubmit={handleSubmit}>
+                <TextInput
+                  type="text"
+                  name="ingredients"
+                  placeholder="eggs, tomatoes, ..."
+                  onChange={handleChange}
+                  onKeyDown={handleKeyDown}
+                />
+                <ChoicesDiv>
+                  <DietDiv>
+                    <p>Choose Your Diet</p>
+                    <PrimaryDiet>
                       <input
                         type="radio"
                         name="diet"
-                        value="ketogenic"
+                        value="none"
                         onChange={handleChange}
                       />
-                      ketogenic
+                      none
                       <input
                         type="radio"
                         name="diet"
-                        value="pescatarian"
+                        value="vegan"
                         onChange={handleChange}
                       />
-                      pescatarian
+                      vegan
                       <input
                         type="radio"
                         name="diet"
-                        value="gluten free"
+                        value="vegetarian"
                         onChange={handleChange}
                       />
-                      gluten free
+                      vegetarian
+                    </PrimaryDiet>
+                    {!isDietHidden ? (
+                      <HiddenDiets>
+                        <input
+                          type="radio"
+                          name="diet"
+                          value="ketogenic"
+                          onChange={handleChange}
+                        />
+                        ketogenic
+                        <input
+                          type="radio"
+                          name="diet"
+                          value="pescatarian"
+                          onChange={handleChange}
+                        />
+                        pescatarian
+                        <input
+                          type="radio"
+                          name="diet"
+                          value="gluten free"
+                          onChange={handleChange}
+                        />
+                        gluten free
+                        <input
+                          type="radio"
+                          name="diet"
+                          value="paleo"
+                          onChange={handleChange}
+                        />
+                        paleo
+                        <input
+                          type="radio"
+                          name="diet"
+                          value="whole30"
+                          onChange={handleChange}
+                        />
+                        whole30
+                      </HiddenDiets>
+                    ) : (
+                      ""
+                    )}
+                  </DietDiv>
+                  <CuisineDiv>
+                    <p>Choose Your Cuisine</p>
+                    <PrimaryCuisine>
                       <input
                         type="radio"
-                        name="diet"
-                        value="paleo"
-                        onChange={handleChange}
-                      />
-                      paleo
-                      <input
-                        type="radio"
-                        name="diet"
-                        value="whole30"
-                        onChange={handleChange}
-                      />
-                      whole30
-                    </HiddenDiets>
-                  ) : (
-                    ""
-                  )}
-                </DietDiv>
-                <CuisineDiv>
-                  <p>Choose Your Cuisine</p>
-                  <PrimaryCuisine>
-                    <input
-                      type="radio"
-                      value="any"
-                      name="cuisine"
-                      onChange={handleChange}
-                    />
-                    any
-                    <input
-                      type="radio"
-                      value="american"
-                      name="cuisine"
-                      onChange={handleChange}
-                    />
-                    american
-                    <input
-                      type="radio"
-                      value="italian"
-                      name="cuisine"
-                      onChange={handleChange}
-                    />
-                    italian
-                    <input
-                      type="radio"
-                      value="mexican"
-                      name="cuisine"
-                      onChange={handleChange}
-                    />
-                    mexican
-                  </PrimaryCuisine>
-                  {!isCuisineHidden ? (
-                    <HiddenCuisine>
-                      <input
-                        type="radio"
-                        value="caribbean"
+                        value="any"
                         name="cuisine"
                         onChange={handleChange}
                       />
-                      caribbean
+                      any
                       <input
                         type="radio"
-                        value="chinese"
+                        value="american"
                         name="cuisine"
                         onChange={handleChange}
                       />
-                      chinese
+                      american
                       <input
                         type="radio"
-                        value="french"
+                        value="italian"
                         name="cuisine"
                         onChange={handleChange}
                       />
-                      french
+                      italian
                       <input
                         type="radio"
-                        value="greek"
+                        value="mexican"
                         name="cuisine"
                         onChange={handleChange}
                       />
-                      greek
-                      <input
-                        type="radio"
-                        value="indian"
-                        name="cuisine"
-                        onChange={handleChange}
-                      />
-                      indian
-                      <input
-                        type="radio"
-                        value="japanese"
-                        name="cuisine"
-                        onChange={handleChange}
-                      />
-                      japanese
-                      <input
-                        type="radio"
-                        value="jewish"
-                        name="cuisine"
-                        onChange={handleChange}
-                      />
-                      jewish
-                      <input
-                        type="radio"
-                        value="korean"
-                        name="cuisine"
-                        onChange={handleChange}
-                      />
-                      korean
-                      <input
-                        type="radio"
-                        value="mediterranean"
-                        name="cuisine"
-                        onChange={handleChange}
-                      />
-                      mediterranean
-                      <input
-                        type="radio"
-                        value="middle eastern"
-                        name="cuisine"
-                        onChange={handleChange}
-                      />
-                      middle eastern
-                      <input
-                        type="radio"
-                        value="southern"
-                        name="cuisine"
-                        onChange={handleChange}
-                      />
-                      spanish
-                      <input
-                        type="radio"
-                        value="thai"
-                        name="cuisine"
-                        onChange={handleChange}
-                      />
-                      thai{" "}
-                      <input
-                        type="radio"
-                        value="vietnamese"
-                        name="cuisine"
-                        onChange={handleChange}
-                      />
-                      vietnamese
-                    </HiddenCuisine>
-                  ) : (
-                    ""
-                  )}
-                </CuisineDiv>
-              </ChoicesDiv>
-              <Button isDisabled={isDisabled}>Search</Button>
-            </Form>
-          </FormDiv>
+                      mexican
+                    </PrimaryCuisine>
+                    {!isCuisineHidden ? (
+                      <HiddenCuisine>
+                        <input
+                          type="radio"
+                          value="caribbean"
+                          name="cuisine"
+                          onChange={handleChange}
+                        />
+                        caribbean
+                        <input
+                          type="radio"
+                          value="chinese"
+                          name="cuisine"
+                          onChange={handleChange}
+                        />
+                        chinese
+                        <input
+                          type="radio"
+                          value="french"
+                          name="cuisine"
+                          onChange={handleChange}
+                        />
+                        french
+                        <input
+                          type="radio"
+                          value="greek"
+                          name="cuisine"
+                          onChange={handleChange}
+                        />
+                        greek
+                        <input
+                          type="radio"
+                          value="indian"
+                          name="cuisine"
+                          onChange={handleChange}
+                        />
+                        indian
+                        <input
+                          type="radio"
+                          value="japanese"
+                          name="cuisine"
+                          onChange={handleChange}
+                        />
+                        japanese
+                        <input
+                          type="radio"
+                          value="jewish"
+                          name="cuisine"
+                          onChange={handleChange}
+                        />
+                        jewish
+                        <input
+                          type="radio"
+                          value="korean"
+                          name="cuisine"
+                          onChange={handleChange}
+                        />
+                        korean
+                        <input
+                          type="radio"
+                          value="mediterranean"
+                          name="cuisine"
+                          onChange={handleChange}
+                        />
+                        mediterranean
+                        <input
+                          type="radio"
+                          value="middle eastern"
+                          name="cuisine"
+                          onChange={handleChange}
+                        />
+                        middle eastern
+                        <input
+                          type="radio"
+                          value="southern"
+                          name="cuisine"
+                          onChange={handleChange}
+                        />
+                        spanish
+                        <input
+                          type="radio"
+                          value="thai"
+                          name="cuisine"
+                          onChange={handleChange}
+                        />
+                        thai{" "}
+                        <input
+                          type="radio"
+                          value="vietnamese"
+                          name="cuisine"
+                          onChange={handleChange}
+                        />
+                        vietnamese
+                      </HiddenCuisine>
+                    ) : (
+                      ""
+                    )}
+                  </CuisineDiv>
+                </ChoicesDiv>
+                <Button isDisabled={isDisabled}>Search</Button>
+              </Form>
+            </FormDiv>
 
-          {filteredRecipes ? (
-            <>
-              <Container>
-                <h1>Results</h1>
-                <MealCardWrapper>
-                  {filteredRecipes.map((recipe, index) => {
-                    return (
-                      <MealCard
-                        key={index}
-                        recipe={recipe}
-                        like={userPreferences.likes}
-                        dislike={userPreferences.dislikes}
-                      />
-                    );
-                  })}
-                </MealCardWrapper>
-              </Container>
-            </>
-          ) : (
-            ""
-          )}
-        </Wrapper>
-        <Wave>
-          <img src={Svg}></img>
-        </Wave>
-      </BackgroundDiv>
-    </>
-  );
+            {filteredRecipes ? (
+              <>
+                <Container>
+                  <h1>Results</h1>
+                  <MealCardWrapper>
+                    {filteredRecipes.map((recipe, index) => {
+                      return (
+                        <MealCard
+                          key={index}
+                          recipe={recipe}
+                          like={userPreferences.likes}
+                          dislike={userPreferences.dislikes}
+                        />
+                      );
+                    })}
+                  </MealCardWrapper>
+                </Container>
+              </>
+            ) : (
+              ""
+            )}
+          </Wrapper>
+          <Wave>
+            <img src={Svg}></img>
+          </Wave>
+        </BackgroundDiv>
+      </>
+    );
+  }
 };
 
 const BackgroundDiv = styled.div`
