@@ -1,14 +1,12 @@
 import { useState, useRef } from "react";
 import styled from "styled-components";
 import MealCard from "./MealCard";
-import Carousel from "styled-components-carousel";
 import Svg from "./assets/bottomwave.svg";
 import { useContext } from "react";
 import { UserContext } from "./UserContext";
 import { useEffect } from "react";
 
 const ComplexSearch = () => {
-  const ref = useRef(null);
   const [filteredRecipes, setFilteredRecipes] = useState(null);
   const [formData, setFormData] = useState({});
   const [isDisabled, setIsDisabled] = useState(true);

@@ -4,7 +4,6 @@ import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import SimilarRecipeCard from "./SimilarRecipeCard";
 import { BiEdit } from "react-icons/bi";
-import { Link } from "react-router-dom";
 
 const Recipe = () => {
   const { id } = useParams();

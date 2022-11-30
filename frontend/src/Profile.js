@@ -58,9 +58,9 @@ const Profile = () => {
               <h2>
                 <div>Cooking Rank: Hobby</div>
                 <div>Diet: None</div>
+                <div>Allergies: None</div>
                 <div>Speciality: Italian</div>
                 <div>Favorite Dish: Carbonara</div>
-                <div>Allergies: None</div>
               </h2>
             </Bio>
           </BioDiv>

@@ -238,7 +238,10 @@ const updateLikes = async (req, res) => {
       .updateOne({ _id: id }, { $pull: { dislikes: recipe } });
     await db
       .collection("Users")
-      .update({ _id: id }, { $push: { edits: { recipe } } });
+      .updateOne(
+        { _id: id },
+        { $push: { edits: { recipeId_: recipe, ingredients: [] } } }
+      );
     const result = await db
       .collection("Users")
       .updateOne({ _id: id }, { $addToSet: { likes: recipe } });
@@ -264,9 +267,6 @@ const removeLike = async (req, res) => {
     await db
       .collection("Users")
       .updateOne({ _id: id }, { $pull: { likes: recipe } });
-    await db
-      .collection("Users")
-      .update({ _id: id }, { $pull: { edits: { recipeId: recipe } } });
     res.status(200).json({ status: 200, message: "Like removed!" });
   } catch (err) {
     res.status(400).json({ status: 400, message: "Could not update likes" });
@@ -304,9 +304,9 @@ const updateDislikes = async (req, res) => {
     await db
       .collection("Users")
       .updateOne({ _id: id }, { $pull: { likes: recipeNum } });
-    await db
-      .collection("Users")
-      .update({ _id: id }, { $pull: { edits: { recipeId: recipe } } });
+    // await db
+    //   .collection("Users")
+    //   .update({ _id: id }, { $pull: { edits: { recipeId: recipe } } });
     await db
       .collection("Users")
       .updateOne({ _id: id }, { $addToSet: { dislikes: recipeNum } });
@@ -337,15 +337,13 @@ const getPreferences = async (req, res) => {
 const updateIngredient = async (req, res) => {
   const db = await getClientDB();
   const { _id, ingredientId, ingredient, recipeId } = req.body;
-  const query = { _id: _id };
   const ingredientInfo = {
     ingredientId: ingredientId,
     ingredient: ingredient,
   };
-  console.log(query);
-  const result = await db
-    .collection("Users")
-    .updateOne(query, { $addToSet: { edits } }, { upsert: true });
+  const query = { _id: _id, "edits.recipeId_": recipeId };
+  const newValues = { $push: { "edits.$.ingredients": ingredientInfo } };
+  const result = await db.collection("Users").updateOne(query, newValues);
   if (result) {
     res.status(200).json({ status: 200, data: result });
   } else {
