@@ -63,7 +63,7 @@ const filteredRecipes = async (req, res) => {
     newIngredients = newIngredients.join();
     const result = JSON.parse(
       await request(
-        `https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY}&includeIngredients=${newIngredients}&ignorePantry=true&instructionsRequired=true&addRecipeInformation=true&number=1&diet=${diet[0]}&cuisine=${cuisine[0]}`,
+        `https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY}&includeIngredients=${newIngredients}&ignorePantry=true&instructionsRequired=true&addRecipeInformation=true&number=10&diet=${diet[0]}&cuisine=${cuisine[0]}`,
         {
           headers: { "Content-Type": "application/json" },
         }
@@ -346,8 +346,8 @@ const updateIngredient = async (req, res) => {
     ingredientId: ingredientId,
     ingredient: ingredient,
   };
-  const query = { _id: _id, "edits.recipeId_": recipeId };
-  const newValues = { $push: { "edits.$.ingredients": ingredientInfo } };
+  const query = { _id: _id, "edits.recipeId_": Number(recipeId) };
+  const newValues = { $addToSet: { "edits.$.ingredients": ingredientInfo } };
   const result = await db.collection("Users").updateOne(query, newValues);
   if (result) {
     res.status(200).json({ status: 200, data: result });
@@ -357,6 +357,22 @@ const updateIngredient = async (req, res) => {
       .json({ status: 400, message: "Could not update ingredients" });
   }
 };
+
+// const getIngredients = async (req, res) => {
+//   try {
+//     // await client.connect();
+//     // const db = client.db("CheckPlz");
+//     const db = await getClientDB();
+//     const id = req.params.id;
+//     const result = await db.collection("Users").findOne({ _id: id });
+//     res.status(200).json({ status: 200, message: "User found", data: result });
+//   } catch (err) {
+//     res.status(400).json({ status: 400, message: "Could not find user" });
+//   } finally {
+//     // client.close();
+//   }
+
+// };
 
 module.exports = {
   filteredRecipes,

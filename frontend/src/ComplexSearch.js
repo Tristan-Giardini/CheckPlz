@@ -5,6 +5,7 @@ import Svg from "./assets/bottomwave.svg";
 import { useContext } from "react";
 import { UserContext } from "./UserContext";
 import { useEffect } from "react";
+import Carousel from "styled-components-carousel";
 
 const ComplexSearch = () => {
   const [filteredRecipes, setFilteredRecipes] = useState(null);
@@ -27,7 +28,6 @@ const ComplexSearch = () => {
       res
         .json()
         .then((data) => {
-          console.log(data);
           setUserPreferences(data.data);
         })
         .catch((e) => console.log("got error", e));
@@ -69,14 +69,14 @@ const ComplexSearch = () => {
                 setIsDietHidden((prev) => !isDietHidden);
               }}
             >
-              {isDietHidden ? "more" : "less"} diets...
+              {isDietHidden ? "more diets..." : "...less diets"}
             </DietButton>
             <CuisineButton
               onClick={() => {
                 setIsCuisineHidden((prev) => !isCuisineHidden);
               }}
             >
-              {isCuisineHidden ? "more" : "less"} cuisines...
+              {isCuisineHidden ? "more cuisines..." : "...less cuisines"}
             </CuisineButton>
             <FormDiv>
               <Form onSubmit={handleSubmit}>
@@ -294,7 +294,12 @@ const ComplexSearch = () => {
               <>
                 <Container>
                   <h1>Results</h1>
-                  <MealCardWrapper>
+                  {/* <MealCardWrapper> */}
+                  <Carousel
+                    infinite={false}
+                    showIndicator={false}
+                    slidesToShow={3}
+                  >
                     {filteredRecipes.map((recipe, index) => {
                       return (
                         <MealCard
@@ -305,7 +310,8 @@ const ComplexSearch = () => {
                         />
                       );
                     })}
-                  </MealCardWrapper>
+                  </Carousel>
+                  {/* </MealCardWrapper> */}
                 </Container>
               </>
             ) : (
@@ -314,6 +320,7 @@ const ComplexSearch = () => {
           </Wrapper>
           <Wave>
             <img src={Svg}></img>
+            <BottomDiv></BottomDiv>
           </Wave>
         </BackgroundDiv>
       </>
@@ -324,6 +331,12 @@ const ComplexSearch = () => {
 const BackgroundDiv = styled.div`
   background-color: var(--select-grey);
   width: 100vw;
+`;
+
+const BottomDiv = styled.div`
+  background-color: var(--darker-pink);
+  height: 600px;
+  margin-top: -10px;
 `;
 
 const TextInput = styled.input`
@@ -414,10 +427,10 @@ const Wrapper = styled.div`
   margin-right: 215px;
   background-color: white;
   height: 620px;
-  overflow: hidden;
+  /* overflow: hidden;
   overflow-y: scroll;
   ::-webkit-scrollbar {
-    display: none;
+    display: none; */
   }
 `;
 

@@ -11,22 +11,19 @@ const Header = () => {
   return (
     <Wrapper>
       <Container>
-        <div>
+        <LogoDiv>
           <Logo to={"/"}>
             CheckPlz <GiCookingGlove />
           </Logo>
-        </div>
+        </LogoDiv>
         <ExploreSearch>
-          <ExploreNav to={`/explore`}>Explore</ExploreNav>
-          <SearchNav to={"/search"}>Search</SearchNav>
           {isAuthenticated ? (
             <ProfileNav to={"/profile"}>Profile</ProfileNav>
           ) : (
             ""
           )}
-        </ExploreSearch>
-        <div>
-          {/* <NavLink to={"/profile"}>Profile</NavLink> */}
+          <ExploreNav to={`/explore`}>Explore</ExploreNav>
+          <SearchNav to={"/search"}>Search</SearchNav>
           {error && <p>Authentication Error</p>}
           {error && isLoading && <p>Loading...</p>}
           {!error && !isLoading && (
@@ -35,10 +32,9 @@ const Header = () => {
               <LogoutButton />
             </>
           )}
-        </div>
+        </ExploreSearch>
       </Container>
       <Underline></Underline>
-      {/* <GradientDiv></GradientDiv> */}
     </Wrapper>
   );
 };
@@ -47,19 +43,20 @@ const Wrapper = styled.div`
   position: -webkit-sticky;
   position: sticky;
   top: 0;
-  z-index: 2000;
+  z-index: 4000;
   background-color: transparent;
+  width: 100vw;
 `;
 
 const ExploreSearch = styled.div`
   display: flex;
   justify-content: center;
-  margin-left: 700px;
+  margin-left: 680px;
   margin-top: 10px;
 `;
 
 const ExploreNav = styled(NavLink)`
-  padding: 20px;
+  padding: 23px;
   margin: 10px;
   text-decoration: none;
   color: black;
@@ -68,7 +65,7 @@ const ExploreNav = styled(NavLink)`
 `;
 
 const SearchNav = styled(NavLink)`
-  padding: 20px;
+  padding: 23px;
   margin: 10px;
   text-decoration: none;
   color: black;
@@ -77,7 +74,7 @@ const SearchNav = styled(NavLink)`
 `;
 
 const ProfileNav = styled(NavLink)`
-  padding: 20px;
+  padding: 23px;
   margin: 10px;
   text-decoration: none;
   color: black;
@@ -96,11 +93,15 @@ const Container = styled.div`
   background-color: var(--darker-pink);
 `;
 
+const LogoDiv = styled.div``;
+
 const Logo = styled(NavLink)`
   font-family: "Shrikhand", cursive;
   font-size: 40px;
   text-decoration: none;
   color: black;
+  display: flex;
+  flex-direction: row; ;
 `;
 
 const Underline = styled.div`

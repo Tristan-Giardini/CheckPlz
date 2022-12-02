@@ -4,14 +4,34 @@ import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import SimilarRecipeCard from "./SimilarRecipeCard";
 import { BiEdit } from "react-icons/bi";
+import { useAuth0 } from "@auth0/auth0-react";
+import { useContext } from "react";
+import { UserContext } from "./UserContext";
 
 const Recipe = () => {
   const { id } = useParams();
+  const { user, isAuthenticated } = useAuth0();
   const [recipe, setRecipe] = useState({});
   const [similarRecipes, setSimilarRecipes] = useState(null);
   const [updatedIngredient, setUpdatedIngredient] = useState("");
   const [editIndex, setEditIndex] = useState(0);
   const [isEditOpen, setIsEditOpen] = useState(false);
+  const { userId } = useContext(UserContext);
+  const [ingredientId, setIngredientId] = useState(null);
+  const [editsArray, setEditsArray] = useState([]);
+  const [isUserIngredient, setIsUserIngredient] = useState(false);
+
+  useEffect(() => {
+    fetch(`/preferences/${userId}`).then((res) => {
+      res
+        .json()
+        .then((data) => {
+          console.log(data);
+          setEditsArray(data.data.edits);
+        })
+        .catch((e) => console.log("got error", e));
+    });
+  }, [userId]);
 
   useEffect(() => {
     fetch(`/single-recipe/${id}`).then((res) => {
@@ -26,13 +46,37 @@ const Recipe = () => {
         .then((data) => setSimilarRecipes(data.data))
         .catch((e) => console.log("got error", e));
     });
-  }, []);
+  }, [editsArray]);
 
-  const editHandler = (index, ingredient) => {
+  const editHandler = (index, ingredient, id) => {
     setUpdatedIngredient(ingredient);
     setIsEditOpen(true);
     setEditIndex(index);
+    setIngredientId(id);
   };
+
+  const updateIngredient = () => {
+    fetch("/update-ingredient", {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        _id: userId,
+        recipeId: id,
+        ingredientId: ingredientId,
+        ingredient: updatedIngredient,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Success:", data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  };
+
   const saveHandler = (id) => {
     const newRecipe = { ...recipe };
     const index = newRecipe.extendedIngredients.findIndex(
@@ -43,11 +87,13 @@ const Recipe = () => {
     }
     setRecipe(newRecipe);
     setIsEditOpen(false);
+    updateIngredient();
   };
 
-  console.log("recipe", recipe);
+  let recipeObject = {};
+  let alteredIngredient = {};
 
-  if (!recipe || !similarRecipes || !recipe.extendedIngredients) {
+  if (!recipe || !similarRecipes || !recipe.extendedIngredients || !id) {
     return <h1>Loading...</h1>;
   } else {
     return (
@@ -97,20 +143,50 @@ const Recipe = () => {
             <Ingredients>
               <h1>Ingredients:</h1>
               {recipe.extendedIngredients.map((ingredient, index) => {
+                let recipeObject = editsArray.find(
+                  (element) => element.recipeId_ === Number(id)
+                );
+                // alteredIngredient = recipeObject.ingredients.find(
+                //   (element) => element.ingredientId === ingredient.id
+                // );
+                // recipeObject.ingredients.forEach((item) => {
+                //   if (item.ingredient === ingredient.id) {
+                //     alteredIngredient = item.ingredient;
+                //   }
+                // });
                 return (
                   <>
-                    <IngredientButton>
-                      {ingredient.original}
-                      {!isEditOpen && (
+                    <IngredientDiv key={index}>
+                      {/* {!editsArray ? (
+                        <div>loading</div>
+                      ) : ( */}
+                      {/* {
+                        (recipeObject = editsArray.find(
+                          (element) => element.recipeId_ === Number(id)
+                        )( */}
+                      {/* {recipeObject.ingredients.forEach((item) => {
+                        item.ingredientId === ingredient.id
+                          ? (alteredIngredient = item.ingredient)
+                          : "";
+                      })}
+                      (<div>{recipeObject.ingredients.ingredient}</div>) : ( */}
+                      {/* <div>{alteredIngredient.ingredient}</div> */}
+                      <div>{ingredient.original}</div>
+                      {/* ) */}
+                      {!isEditOpen && isAuthenticated && (
                         <EditButton
                           onClick={() => {
-                            editHandler(index, ingredient.original);
+                            editHandler(
+                              index,
+                              ingredient.original,
+                              ingredient.id
+                            );
                           }}
                         >
                           <BiEdit />
                         </EditButton>
                       )}
-                    </IngredientButton>
+                    </IngredientDiv>
                     {isEditOpen && index === editIndex && (
                       <EditSave>
                         <textarea
@@ -275,7 +351,7 @@ const IngredientsDirections = styled.div`
   }
 `;
 
-const IngredientButton = styled.div`
+const IngredientDiv = styled.div`
   display: flex;
   flex-direction: row;
   align-content: space-between;

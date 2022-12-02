@@ -15,14 +15,21 @@ const LoginButton = () => {
 const Button = styled.button`
   background-color: transparent;
   border: none;
-  display: inline-block;
+  padding: 20px;
+  padding-bottom: 30px;
+  margin: 10px;
+  text-decoration: none;
+  color: black;
+  font-size: 20px;
+  font-weight: bold;
+  /* display: inline-block; */
   cursor: pointer;
   /* border-style: solid;
   border-radius: 1px;
   border-color: transparent; */
   color: black;
-  font-size: 20px;
-  padding-top: 9px;
+  /* font-size: 20px;
+  padding-top: 9px; */
   /* padding: 18px;
   margin: 10px; */
   text-decoration: none;
