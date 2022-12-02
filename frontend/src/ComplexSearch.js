@@ -14,7 +14,9 @@ const ComplexSearch = () => {
   const [isDietHidden, setIsDietHidden] = useState(true);
   const [isCuisineHidden, setIsCuisineHidden] = useState(true);
   const [userPreferences, setUserPreferences] = useState({});
-  const { userId } = useContext(UserContext);
+  const [isDietClicked, setIsDietClicked] = useState(false);
+  const [isCuisineClicked, setIsCuisineClicked] = useState(false);
+  const { userId, setFailed, setErrorMessage } = useContext(UserContext);
 
   const handleChange = (e) => {
     setFormData({
@@ -28,9 +30,13 @@ const ComplexSearch = () => {
       res
         .json()
         .then((data) => {
+          console.log(data);
           setUserPreferences(data.data);
         })
-        .catch((e) => console.log("got error", e));
+        .catch((e) => {
+          setFailed(true);
+          setErrorMessage("Sorry we couldn't find what you were looking for!");
+        });
     });
   }, [userId]);
 
@@ -47,6 +53,10 @@ const ComplexSearch = () => {
       .then((res) => res.json())
       .then((data) => {
         setFilteredRecipes(data.data.results);
+      })
+      .catch((e) => {
+        setFailed(true);
+        setErrorMessage("Sorry we couldn't find what you were looking for!");
       });
   };
 
@@ -54,6 +64,17 @@ const ComplexSearch = () => {
     setIsDisabled(false);
   };
 
+  const handleSearchClick = () => {
+    if (!isDietClicked) {
+      window.alert("fill out diet field!");
+    }
+    if (!isCuisineClicked) {
+      window.alert("fill out cuisine field!");
+    }
+    if (isDisabled) {
+      window.alert("enter ingredients!");
+    }
+  };
   const like = false;
   const dislike = false;
 
@@ -96,6 +117,7 @@ const ComplexSearch = () => {
                         name="diet"
                         value="none"
                         onChange={handleChange}
+                        onClick={() => setIsDietClicked(true)}
                       />
                       none
                       <input
@@ -103,6 +125,7 @@ const ComplexSearch = () => {
                         name="diet"
                         value="vegan"
                         onChange={handleChange}
+                        onClick={() => setIsDietClicked(true)}
                       />
                       vegan
                       <input
@@ -110,6 +133,7 @@ const ComplexSearch = () => {
                         name="diet"
                         value="vegetarian"
                         onChange={handleChange}
+                        onClick={() => setIsDietClicked(true)}
                       />
                       vegetarian
                     </PrimaryDiet>
@@ -120,6 +144,7 @@ const ComplexSearch = () => {
                           name="diet"
                           value="ketogenic"
                           onChange={handleChange}
+                          onClick={() => setIsDietClicked(true)}
                         />
                         ketogenic
                         <input
@@ -127,6 +152,7 @@ const ComplexSearch = () => {
                           name="diet"
                           value="pescatarian"
                           onChange={handleChange}
+                          onClick={() => setIsDietClicked(true)}
                         />
                         pescatarian
                         <input
@@ -134,6 +160,7 @@ const ComplexSearch = () => {
                           name="diet"
                           value="gluten free"
                           onChange={handleChange}
+                          onClick={() => setIsDietClicked(true)}
                         />
                         gluten free
                         <input
@@ -141,6 +168,7 @@ const ComplexSearch = () => {
                           name="diet"
                           value="paleo"
                           onChange={handleChange}
+                          onClick={() => setIsDietClicked(true)}
                         />
                         paleo
                         <input
@@ -148,6 +176,7 @@ const ComplexSearch = () => {
                           name="diet"
                           value="whole30"
                           onChange={handleChange}
+                          onClick={() => setIsDietClicked(true)}
                         />
                         whole30
                       </HiddenDiets>
@@ -163,6 +192,7 @@ const ComplexSearch = () => {
                         value="any"
                         name="cuisine"
                         onChange={handleChange}
+                        onClick={() => setIsCuisineClicked(true)}
                       />
                       any
                       <input
@@ -170,6 +200,7 @@ const ComplexSearch = () => {
                         value="american"
                         name="cuisine"
                         onChange={handleChange}
+                        onClick={() => setIsCuisineClicked(true)}
                       />
                       american
                       <input
@@ -177,6 +208,7 @@ const ComplexSearch = () => {
                         value="italian"
                         name="cuisine"
                         onChange={handleChange}
+                        onClick={() => setIsCuisineClicked(true)}
                       />
                       italian
                       <input
@@ -184,6 +216,7 @@ const ComplexSearch = () => {
                         value="mexican"
                         name="cuisine"
                         onChange={handleChange}
+                        onClick={() => setIsCuisineClicked(true)}
                       />
                       mexican
                     </PrimaryCuisine>
@@ -194,6 +227,7 @@ const ComplexSearch = () => {
                           value="caribbean"
                           name="cuisine"
                           onChange={handleChange}
+                          onClick={() => setIsCuisineClicked(true)}
                         />
                         caribbean
                         <input
@@ -201,6 +235,7 @@ const ComplexSearch = () => {
                           value="chinese"
                           name="cuisine"
                           onChange={handleChange}
+                          onClick={() => setIsCuisineClicked(true)}
                         />
                         chinese
                         <input
@@ -208,6 +243,7 @@ const ComplexSearch = () => {
                           value="french"
                           name="cuisine"
                           onChange={handleChange}
+                          onClick={() => setIsCuisineClicked(true)}
                         />
                         french
                         <input
@@ -215,6 +251,7 @@ const ComplexSearch = () => {
                           value="greek"
                           name="cuisine"
                           onChange={handleChange}
+                          onClick={() => setIsCuisineClicked(true)}
                         />
                         greek
                         <input
@@ -222,6 +259,7 @@ const ComplexSearch = () => {
                           value="indian"
                           name="cuisine"
                           onChange={handleChange}
+                          onClick={() => setIsCuisineClicked(true)}
                         />
                         indian
                         <input
@@ -229,6 +267,7 @@ const ComplexSearch = () => {
                           value="japanese"
                           name="cuisine"
                           onChange={handleChange}
+                          onClick={() => setIsCuisineClicked(true)}
                         />
                         japanese
                         <input
@@ -236,6 +275,7 @@ const ComplexSearch = () => {
                           value="jewish"
                           name="cuisine"
                           onChange={handleChange}
+                          onClick={() => setIsCuisineClicked(true)}
                         />
                         jewish
                         <input
@@ -243,6 +283,7 @@ const ComplexSearch = () => {
                           value="korean"
                           name="cuisine"
                           onChange={handleChange}
+                          onClick={() => setIsCuisineClicked(true)}
                         />
                         korean
                         <input
@@ -250,6 +291,7 @@ const ComplexSearch = () => {
                           value="mediterranean"
                           name="cuisine"
                           onChange={handleChange}
+                          onClick={() => setIsCuisineClicked(true)}
                         />
                         mediterranean
                         <input
@@ -257,6 +299,7 @@ const ComplexSearch = () => {
                           value="middle eastern"
                           name="cuisine"
                           onChange={handleChange}
+                          onClick={() => setIsCuisineClicked(true)}
                         />
                         middle eastern
                         <input
@@ -264,6 +307,7 @@ const ComplexSearch = () => {
                           value="southern"
                           name="cuisine"
                           onChange={handleChange}
+                          onClick={() => setIsCuisineClicked(true)}
                         />
                         spanish
                         <input
@@ -271,6 +315,7 @@ const ComplexSearch = () => {
                           value="thai"
                           name="cuisine"
                           onChange={handleChange}
+                          onClick={() => setIsCuisineClicked(true)}
                         />
                         thai{" "}
                         <input
@@ -278,6 +323,7 @@ const ComplexSearch = () => {
                           value="vietnamese"
                           name="cuisine"
                           onChange={handleChange}
+                          onClick={() => setIsCuisineClicked(true)}
                         />
                         vietnamese
                       </HiddenCuisine>
@@ -286,7 +332,9 @@ const ComplexSearch = () => {
                     )}
                   </CuisineDiv>
                 </ChoicesDiv>
-                <Button isDisabled={isDisabled}>Search</Button>
+                <Button isDisabled={isDisabled} onClick={handleSearchClick}>
+                  Search
+                </Button>
               </Form>
             </FormDiv>
 
@@ -335,7 +383,7 @@ const BackgroundDiv = styled.div`
 
 const BottomDiv = styled.div`
   background-color: var(--darker-pink);
-  height: 600px;
+  height: 560px;
   margin-top: -10px;
 `;
 
@@ -431,7 +479,7 @@ const Wrapper = styled.div`
   overflow-y: scroll;
   ::-webkit-scrollbar {
     display: none; */
-  }
+  /* } */
 `;
 
 const MealCardWrapper = styled.div`

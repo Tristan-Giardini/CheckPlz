@@ -9,7 +9,7 @@ import LikedDishes from "./LikedDishes";
 
 const Profile = () => {
   const { user, isAuthenticated } = useAuth0();
-  const { userId } = useContext(UserContext);
+  const { userId, setFailed, setErrorMessage } = useContext(UserContext);
   const [userPreferences, setUserPreferences] = useState({});
 
   useEffect(() => {
@@ -19,7 +19,10 @@ const Profile = () => {
         .then((data) => {
           setUserPreferences(data.data);
         })
-        .catch((e) => console.log("got error", e));
+        .catch((e) => {
+          setFailed(true);
+          setErrorMessage("Sorry we couldn't find what you were looking for!");
+        });
     });
   }, [userId]);
 

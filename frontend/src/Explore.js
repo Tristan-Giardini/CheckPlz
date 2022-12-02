@@ -5,6 +5,7 @@ import MealCard from "./MealCard";
 import Carousel from "styled-components-carousel";
 import styled from "styled-components";
 import { UserContext } from "./UserContext";
+import { CircularProgress } from "@material-ui/core";
 
 const Explore = () => {
   const [randomRecipes, setRandomRecipes] = useState(null);
@@ -12,20 +13,8 @@ const Explore = () => {
   const [dietRecipes, setDietRecipes] = useState(null);
   const [cuisine, setCuisine] = useState(null);
   const [diet, setDiet] = useState(null);
-  const { userId, user } = useContext(UserContext);
+  const { userId, user, setFailed, setErrorMessage } = useContext(UserContext);
   const [userPreferences, setUserPreferences] = useState({});
-
-  // const handleUserPreferences = () => {
-  //   fetch(`/preferences/${userId}`).then((res) => {
-  //     res
-  //       .json()
-  //       .then((data) => {
-  //         console.log(data);
-  //         setUserPreferences(data.data);
-  //       })
-  //       .catch((e) => console.log("got error", e));
-  //   });
-  // };
 
   useEffect(() => {
     fetch(`/preferences/${userId}`).then((res) => {
@@ -35,7 +24,10 @@ const Explore = () => {
           console.log(data);
           setUserPreferences(data.data);
         })
-        .catch((e) => console.log("got error", e));
+        .catch((e) => {
+          setFailed(true);
+          setErrorMessage("Sorry we couldn't find what you were looking for!");
+        });
     });
   }, [userId]);
 
@@ -44,7 +36,10 @@ const Explore = () => {
       res
         .json()
         .then((data) => setRandomRecipes(data.data.recipes))
-        .catch((e) => console.log("got error", e));
+        .catch((e) => {
+          setFailed(true);
+          setErrorMessage("Sorry we couldn't find what you were looking for!");
+        });
     });
     fetch("/cuisine-recipes").then((res) => {
       res
@@ -53,7 +48,10 @@ const Explore = () => {
           setCuisineRecipes(data.data.recipes);
           setCuisine(data.message);
         })
-        .catch((e) => console.log("got error", e));
+        .catch((e) => {
+          setFailed(true);
+          setErrorMessage("Sorry we couldn't find what you were looking for!");
+        });
     });
     fetch("/dietary-recipes").then((res) => {
       res
@@ -62,33 +60,12 @@ const Explore = () => {
           setDietRecipes(data.data.recipes);
           setDiet(data.message);
         })
-        .catch((e) => console.log("got error", e));
+        .catch((e) => {
+          setFailed(true);
+          setErrorMessage("Sorry we couldn't find what you were looking for!");
+        });
     });
   }, [userPreferences]);
-
-  // const handleUserPreferences = () => {
-  //   fetch(`/preferences/${userId}`).then((res) => {
-  //     res
-  //       .json()
-  //       .then((data) => {
-  //         console.log(data);
-  //         setUserPreferences(data.data);
-  //       })
-  //       .catch((e) => console.log("got error", e));
-  //   });
-  // };
-
-  // useEffect(() => {
-  //   fetch(`/preferences/${userId}`).then((res) => {
-  //     res
-  //       .json()
-  //       .then((data) => {
-  //         console.log(data);
-  //         setUserPreferences(data.data);
-  //       })
-  //       .catch((e) => console.log("got error", e));
-  //   });
-  // }, [userId]);
 
   if (
     !randomRecipes ||

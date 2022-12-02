@@ -1,17 +1,22 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { NavLink } from "react-router-dom";
+import { UserContext } from "./UserContext";
 
 const SimilarRecipeCard = ({ recipe }) => {
   const [recommendedRecipe, setRecommendedRecipe] = useState();
+  const { setFailed, setErrorMessage } = useContext(UserContext);
 
   useEffect(() => {
     fetch(`/single-recipe/${recipe}`).then((res) => {
       res
         .json()
         .then((data) => setRecommendedRecipe(data.data))
-        .catch((e) => console.log("got error", e));
+        .catch((e) => {
+          setFailed(true);
+          setErrorMessage("Sorry we couldn't find what you were looking for!");
+        });
     });
   }, []);
 

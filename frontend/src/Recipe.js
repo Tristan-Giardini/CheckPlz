@@ -16,9 +16,9 @@ const Recipe = () => {
   const [updatedIngredient, setUpdatedIngredient] = useState("");
   const [editIndex, setEditIndex] = useState(0);
   const [isEditOpen, setIsEditOpen] = useState(false);
-  const { userId } = useContext(UserContext);
+  const { userId, setFailed, setErrorMessage } = useContext(UserContext);
   const [ingredientId, setIngredientId] = useState(null);
-  const [editsArray, setEditsArray] = useState([]);
+  const [editsArray, setEditsArray] = useState(null);
   const [isUserIngredient, setIsUserIngredient] = useState(false);
 
   useEffect(() => {
@@ -29,7 +29,10 @@ const Recipe = () => {
           console.log(data);
           setEditsArray(data.data.edits);
         })
-        .catch((e) => console.log("got error", e));
+        .catch((e) => {
+          setFailed(true);
+          setErrorMessage("Sorry we couldn't find what you were looking for!");
+        });
     });
   }, [userId]);
 
@@ -38,13 +41,19 @@ const Recipe = () => {
       res
         .json()
         .then((data) => setRecipe(data.data))
-        .catch((e) => console.log("got error", e));
+        .catch((e) => {
+          setFailed(true);
+          setErrorMessage("Sorry we couldn't find what you were looking for!");
+        });
     });
     fetch(`/similar-recipes/${id}`).then((res) => {
       res
         .json()
         .then((data) => setSimilarRecipes(data.data))
-        .catch((e) => console.log("got error", e));
+        .catch((e) => {
+          setFailed(true);
+          setErrorMessage("Sorry we couldn't find what you were looking for!");
+        });
     });
   }, [editsArray]);
 
@@ -90,10 +99,16 @@ const Recipe = () => {
     updateIngredient();
   };
 
-  let recipeObject = {};
+  let recipeObject = null;
   let alteredIngredient = {};
 
-  if (!recipe || !similarRecipes || !recipe.extendedIngredients || !id) {
+  if (
+    !recipe ||
+    !similarRecipes ||
+    !recipe.extendedIngredients ||
+    !id ||
+    !editsArray
+  ) {
     return <h1>Loading...</h1>;
   } else {
     return (
@@ -131,9 +146,9 @@ const Recipe = () => {
                 <h1>Similar Recipes:</h1>
                 {similarRecipes.map((recipe, index) => {
                   return (
-                    <>
-                      <SimilarRecipeCard key={index} recipe={recipe.id} />
-                    </>
+                    <div key={index}>
+                      <SimilarRecipeCard recipe={recipe.id} />
+                    </div>
                   );
                 })}
               </SimilarContainer>
@@ -143,36 +158,30 @@ const Recipe = () => {
             <Ingredients>
               <h1>Ingredients:</h1>
               {recipe.extendedIngredients.map((ingredient, index) => {
-                let recipeObject = editsArray.find(
+                recipeObject = editsArray.find(
                   (element) => element.recipeId_ === Number(id)
                 );
-                // alteredIngredient = recipeObject.ingredients.find(
-                //   (element) => element.ingredientId === ingredient.id
-                // );
-                // recipeObject.ingredients.forEach((item) => {
-                //   if (item.ingredient === ingredient.id) {
-                //     alteredIngredient = item.ingredient;
-                //   }
-                // });
+
+                {
+                  recipeObject && recipeObject.ingredients.length > 0 ? (
+                    recipeObject.ingredients.forEach((item) => {
+                      if (item.ingredientId === ingredient.id) {
+                        alteredIngredient = item;
+                      }
+                    })
+                  ) : (
+                    <></>
+                  );
+                }
+
                 return (
-                  <>
-                    <IngredientDiv key={index}>
-                      {/* {!editsArray ? (
-                        <div>loading</div>
-                      ) : ( */}
-                      {/* {
-                        (recipeObject = editsArray.find(
-                          (element) => element.recipeId_ === Number(id)
-                        )( */}
-                      {/* {recipeObject.ingredients.forEach((item) => {
-                        item.ingredientId === ingredient.id
-                          ? (alteredIngredient = item.ingredient)
-                          : "";
-                      })}
-                      (<div>{recipeObject.ingredients.ingredient}</div>) : ( */}
-                      {/* <div>{alteredIngredient.ingredient}</div> */}
-                      <div>{ingredient.original}</div>
-                      {/* ) */}
+                  <div key={index}>
+                    <IngredientDiv>
+                      {alteredIngredient.ingredientId === ingredient.id ? (
+                        <IngDiv>{alteredIngredient.ingredient}</IngDiv>
+                      ) : (
+                        <IngDiv>{ingredient.original}</IngDiv>
+                      )}
                       {!isEditOpen && isAuthenticated && (
                         <EditButton
                           onClick={() => {
@@ -208,7 +217,7 @@ const Recipe = () => {
                         </SaveButton>
                       </EditSave>
                     )}
-                  </>
+                  </div>
                 );
               })}
             </Ingredients>
@@ -216,9 +225,9 @@ const Recipe = () => {
               <h1>Directions:</h1>
               {recipe.analyzedInstructions[0].steps.map((item, index) => {
                 return (
-                  <>
-                    <div key={index}>{item.step}</div>
-                  </>
+                  <div key={index}>
+                    <DirDiv>{item.step}</DirDiv>
+                  </div>
                 );
               })}
             </Directions>
@@ -314,28 +323,36 @@ const ImageDiv = styled.div`
 `;
 
 const Ingredients = styled.div`
-  div {
-    padding: 15px;
-    font-size: 20px;
-    border-bottom: 2px solid var(--select-grey);
-  }
   border-right: 2px solid var(--select-grey);
-  max-width: 800px;
+  max-width: 850px;
   margin-left: 15px;
   h1 {
     padding-top: 15px;
   }
 `;
 
+const IngDiv = styled.div`
+  padding: 15px;
+  font-size: 20px;
+  border-bottom: 2px solid var(--select-grey);
+  width: 228px;
+`;
+
 const Directions = styled.div`
-  div {
+  /* div {
     padding: 15px;
     border-bottom: 2px solid var(--select-grey);
     font-size: 20px;
-  }
+  } */
   h1 {
     padding: 15px;
   }
+`;
+
+const DirDiv = styled.div`
+  padding: 15px;
+  border-bottom: 2px solid var(--select-grey);
+  font-size: 20px;
 `;
 
 const IngredientsDirections = styled.div`
@@ -355,7 +372,7 @@ const IngredientDiv = styled.div`
   display: flex;
   flex-direction: row;
   align-content: space-between;
-  width: 228px;
+  width: 258px;
   position: relative;
 `;
 

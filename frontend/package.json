@@ -4,6 +4,9 @@
   "proxy": "http://localhost:8000",
   "dependencies": {
     "@auth0/auth0-react": "^1.12.0",
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
+    "@mui/material": "^5.10.16",
     "@trendyol-js/react-carousel": "^3.0.0",
     "dotenv": "^16.0.3",
     "react": "^18.2.0",
