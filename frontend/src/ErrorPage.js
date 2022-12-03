@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import { FaBomb } from "react-icons/fa";
 import styled from "styled-components";
 import { UserContext } from "./UserContext";
@@ -13,7 +13,6 @@ const ErrorPage = () => {
       <div className="error">An unknown error has occured!</div>
       <div className="trip">{errorMessage}</div>
       <div>Either refresh the page...</div>
-
       <a href={`/`}>Or please return home!</a>
     </StyledDiv>
   );

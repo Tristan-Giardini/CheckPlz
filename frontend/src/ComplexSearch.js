@@ -1,11 +1,11 @@
-import { useState, useRef } from "react";
+import { useState, useContext } from "react";
 import styled from "styled-components";
 import MealCard from "./MealCard";
 import Svg from "./assets/bottomwave.svg";
-import { useContext } from "react";
 import { UserContext } from "./UserContext";
 import { useEffect } from "react";
 import Carousel from "styled-components-carousel";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const ComplexSearch = () => {
   const [filteredRecipes, setFilteredRecipes] = useState(null);
@@ -75,11 +75,15 @@ const ComplexSearch = () => {
       window.alert("enter ingredients!");
     }
   };
-  const like = false;
-  const dislike = false;
 
   if (!userPreferences.likes || !userPreferences.dislikes) {
-    <h1>Loading...</h1>;
+    return (
+      <LoadingDiv>
+        <div>
+          <CircularProgress color="inherit" />
+        </div>
+      </LoadingDiv>
+    );
   } else {
     return (
       <>
@@ -340,27 +344,34 @@ const ComplexSearch = () => {
 
             {filteredRecipes ? (
               <>
-                <Container>
-                  <h1>Results</h1>
-                  {/* <MealCardWrapper> */}
-                  <Carousel
-                    infinite={false}
-                    showIndicator={false}
-                    slidesToShow={3}
-                  >
-                    {filteredRecipes.map((recipe, index) => {
-                      return (
-                        <MealCard
-                          key={index}
-                          recipe={recipe}
-                          like={userPreferences.likes}
-                          dislike={userPreferences.dislikes}
-                        />
-                      );
-                    })}
-                  </Carousel>
-                  {/* </MealCardWrapper> */}
-                </Container>
+                {filteredRecipes.length > 0 ? (
+                  <Container>
+                    <h1>Results</h1>
+                    <Carousel
+                      infinite={false}
+                      showIndicator={false}
+                      slidesToShow={3}
+                    >
+                      {filteredRecipes.map((recipe, index) => {
+                        return (
+                          <MealCard
+                            key={index}
+                            recipe={recipe}
+                            like={userPreferences.likes}
+                            dislike={userPreferences.dislikes}
+                          />
+                        );
+                      })}
+                    </Carousel>
+                  </Container>
+                ) : (
+                  <NoRecipe>
+                    <h1>
+                      <div>No results matched your search!</div>
+                      <div>Try again!</div>
+                    </h1>
+                  </NoRecipe>
+                )}{" "}
               </>
             ) : (
               ""
@@ -379,6 +390,18 @@ const ComplexSearch = () => {
 const BackgroundDiv = styled.div`
   background-color: var(--select-grey);
   width: 100vw;
+`;
+
+const LoadingDiv = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  height: 50vh;
 `;
 
 const BottomDiv = styled.div`
@@ -475,19 +498,19 @@ const Wrapper = styled.div`
   margin-right: 215px;
   background-color: white;
   height: 620px;
-  /* overflow: hidden;
-  overflow-y: scroll;
-  ::-webkit-scrollbar {
-    display: none; */
-  /* } */
 `;
 
-const MealCardWrapper = styled.div`
+const NoRecipe = styled.div`
+  z-index: 3000;
+  padding-top: 100px;
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  width: 1000px;
   justify-content: center;
+  align-items: center;
+  div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 `;
 
 const Container = styled.div`
@@ -495,6 +518,7 @@ const Container = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   width: 995px;
+  z-index: 2001;
   h1 {
     margin: 20px;
   }

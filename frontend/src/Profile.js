@@ -1,11 +1,9 @@
 import { useAuth0 } from "@auth0/auth0-react";
-import React from "react";
 import styled from "styled-components";
-import { useContext } from "react";
 import { UserContext } from "./UserContext";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import SimilarRecipeCard from "./SimilarRecipeCard";
-import LikedDishes from "./LikedDishes";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const Profile = () => {
   const { user, isAuthenticated } = useAuth0();
@@ -28,11 +26,16 @@ const Profile = () => {
 
   console.log(userPreferences);
 
-  return (
-    isAuthenticated &&
-    userPreferences &&
-    userPreferences.likes &&
-    user && (
+  if (!isAuthenticated || !userPreferences || !user || !userPreferences.likes) {
+    return (
+      <LoadingDiv>
+        <div>
+          <CircularProgress color="inherit" />
+        </div>
+      </LoadingDiv>
+    );
+  } else {
+    return (
       <BackgroundDiv>
         <Wrapper>
           <Title>
@@ -69,9 +72,21 @@ const Profile = () => {
           </BioDiv>
         </Wrapper>
       </BackgroundDiv>
-    )
-  );
+    );
+  }
 };
+
+const LoadingDiv = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  height: 50vh;
+`;
 
 const Wrapper = styled.div`
   margin-left: 50px;

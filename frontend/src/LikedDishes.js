@@ -1,7 +1,6 @@
 import React, { useContext } from "react";
 import { useEffect } from "react";
 import { useState } from "react";
-import SimilarRecipeCard from "./SimilarRecipeCard";
 import { UserContext } from "./UserContext";
 
 const LikedDishes = ({ like }) => {

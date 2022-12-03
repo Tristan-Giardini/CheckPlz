@@ -18,22 +18,9 @@ const Button = styled.button`
   color: black;
   font-size: 20px;
   font-weight: bold;
-  /* display: inline-block; */
   cursor: pointer;
-  /* border-style: solid;
-  border-radius: 1px;
-  border-color: transparent; */
   color: black;
-  /* font-size: 20px;
-  padding-top: 9px; */
-  /* padding: 18px;
-  margin: 10px; */
   text-decoration: none;
-  /* :hover {
-    border-style: solid;
-    border-radius: 1px;
-    border-color: black;
-  } */
 `;
 //the logout button is saying if it is authenticated then show a sign out button
 //on click it redirects to logout

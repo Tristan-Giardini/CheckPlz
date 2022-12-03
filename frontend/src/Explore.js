@@ -1,11 +1,9 @@
-import React, { useContext } from "react";
-import { useState } from "react";
-import { useEffect } from "react";
+import { useContext, useState, useEffect } from "react";
 import MealCard from "./MealCard";
 import Carousel from "styled-components-carousel";
 import styled from "styled-components";
 import { UserContext } from "./UserContext";
-import { CircularProgress } from "@material-ui/core";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const Explore = () => {
   const [randomRecipes, setRandomRecipes] = useState(null);
@@ -74,7 +72,13 @@ const Explore = () => {
     !userPreferences.likes ||
     !userPreferences.dislikes
   ) {
-    return <h1>Loading...</h1>;
+    return (
+      <LoadingDiv>
+        <div>
+          <CircularProgress color="inherit" />
+        </div>
+      </LoadingDiv>
+    );
   } else {
     return (
       <BackgroundDiv>
@@ -140,6 +144,18 @@ const Explore = () => {
 
 const BackgroundDiv = styled.div`
   background-color: var(--select-grey);
+`;
+
+const LoadingDiv = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  height: 50vh;
 `;
 
 const Wrapper = styled.div`

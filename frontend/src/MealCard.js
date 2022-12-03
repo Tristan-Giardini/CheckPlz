@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import { NavLink } from "react-router-dom";
-import { useAuth0 } from "@auth0/auth0-react";
 import { useState } from "react";
 import { UserContext } from "./UserContext";
 import { useContext } from "react";
@@ -10,8 +9,6 @@ const MealCard = ({ recipe, like, dislike }) => {
   const [isDisliked, setIsDisliked] = useState(
     dislike.some((id) => id === recipe.id)
   );
-  // const [isLiked, setIsLiked] = useState(false);
-  // const [isDisliked, setIsDisliked] = useState(false);
   const { userId } = useContext(UserContext);
 
   const likes = { recipe: recipe.id, id: userId };
@@ -89,13 +86,8 @@ const MealCard = ({ recipe, like, dislike }) => {
     }
   };
 
-  // if (!like) {
-  //   <h1>Loading...</h1>;
-  // } else {
   return (
     <>
-      {/* {setIsLiked(like.some((id) => id === recipe.id))}
-        {setIsDisliked(dislike.some((id) => id === recipe.id))} */}
       {isDisliked ? <Gross>Gross</Gross> : null}
       <Container isLiked={isLiked} isDisliked={isDisliked}>
         <Emojis>

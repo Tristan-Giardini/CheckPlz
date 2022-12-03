@@ -63,7 +63,7 @@ const filteredRecipes = async (req, res) => {
     newIngredients = newIngredients.join();
     const result = JSON.parse(
       await request(
-        `https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY}&includeIngredients=${newIngredients}&ignorePantry=true&instructionsRequired=true&addRecipeInformation=true&number=1&diet=${diet[0]}&cuisine=${cuisine[0]}`,
+        `https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY}&includeIngredients=${newIngredients}&ignorePantry=true&instructionsRequired=true&addRecipeInformation=true&number=5&diet=${diet[0]}&cuisine=${cuisine[0]}`,
         {
           headers: { "Content-Type": "application/json" },
         }

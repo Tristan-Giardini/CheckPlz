@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useContext } from "react";
 import styled from "styled-components";
 import chefcooking from "./assets/chefcooking.png";
 import chefcooking2 from "./assets/chefcooking2.png";
@@ -6,7 +6,6 @@ import Svg from "./assets/wave.svg";
 import plate from "./assets/plate.png";
 import produce from "./assets/Produce2.png";
 import { useAuth0 } from "@auth0/auth0-react";
-import { useContext } from "react";
 import { UserContext } from "./UserContext";
 
 const Homepage = () => {

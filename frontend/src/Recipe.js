@@ -1,16 +1,15 @@
-import React from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import SimilarRecipeCard from "./SimilarRecipeCard";
 import { BiEdit } from "react-icons/bi";
 import { useAuth0 } from "@auth0/auth0-react";
-import { useContext } from "react";
 import { UserContext } from "./UserContext";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const Recipe = () => {
   const { id } = useParams();
-  const { user, isAuthenticated } = useAuth0();
+  const { isAuthenticated } = useAuth0();
   const [recipe, setRecipe] = useState({});
   const [similarRecipes, setSimilarRecipes] = useState(null);
   const [updatedIngredient, setUpdatedIngredient] = useState("");
@@ -19,7 +18,6 @@ const Recipe = () => {
   const { userId, setFailed, setErrorMessage } = useContext(UserContext);
   const [ingredientId, setIngredientId] = useState(null);
   const [editsArray, setEditsArray] = useState(null);
-  const [isUserIngredient, setIsUserIngredient] = useState(false);
 
   useEffect(() => {
     fetch(`/preferences/${userId}`).then((res) => {
@@ -55,7 +53,7 @@ const Recipe = () => {
           setErrorMessage("Sorry we couldn't find what you were looking for!");
         });
     });
-  }, [editsArray]);
+  }, [editsArray, id]);
 
   const editHandler = (index, ingredient, id) => {
     setUpdatedIngredient(ingredient);
@@ -109,7 +107,13 @@ const Recipe = () => {
     !id ||
     !editsArray
   ) {
-    return <h1>Loading...</h1>;
+    return (
+      <LoadingDiv>
+        <div>
+          <CircularProgress color="inherit" />
+        </div>
+      </LoadingDiv>
+    );
   } else {
     return (
       <BackgroundDiv>
@@ -242,6 +246,18 @@ const BackgroundDiv = styled.div`
   background-color: var(--select-grey);
 `;
 
+const LoadingDiv = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  height: 50vh;
+`;
+
 const Source = styled.div`
   font-size: 14px;
   max-width: 550px;
@@ -339,11 +355,6 @@ const IngDiv = styled.div`
 `;
 
 const Directions = styled.div`
-  /* div {
-    padding: 15px;
-    border-bottom: 2px solid var(--select-grey);
-    font-size: 20px;
-  } */
   h1 {
     padding: 15px;
   }
@@ -409,7 +420,7 @@ const SimilarContainer = styled.div`
   }
   border-bottom: 1px solid var(--select-grey);
   overflow: hidden;
-  height: 380px;
+  height: 391px;
   width: 295px;
   overflow-y: scroll;
   ::-webkit-scrollbar {

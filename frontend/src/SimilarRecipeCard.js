@@ -1,8 +1,8 @@
-import React, { useContext } from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import styled from "styled-components";
 import { NavLink } from "react-router-dom";
 import { UserContext } from "./UserContext";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const SimilarRecipeCard = ({ recipe }) => {
   const [recommendedRecipe, setRecommendedRecipe] = useState();
@@ -14,14 +14,19 @@ const SimilarRecipeCard = ({ recipe }) => {
         .json()
         .then((data) => setRecommendedRecipe(data.data))
         .catch((e) => {
+          console.log("here");
           setFailed(true);
           setErrorMessage("Sorry we couldn't find what you were looking for!");
         });
     });
-  }, []);
+  }, [recipe]);
 
   if (!recommendedRecipe) {
-    return <h1>Loading...</h1>;
+    return (
+      <Wrapper>
+        <CircularProgress color="inherit" />
+      </Wrapper>
+    );
   } else {
     return (
       <>

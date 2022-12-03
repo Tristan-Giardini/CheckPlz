@@ -18,12 +18,14 @@ const Header = () => {
         </LogoDiv>
         <ExploreSearch>
           {isAuthenticated ? (
-            <ProfileNav to={"/profile"}>Profile</ProfileNav>
+            <>
+              <ProfileNav to={"/profile"}>Profile</ProfileNav>
+              <ExploreNav to={`/explore`}>Explore</ExploreNav>
+              <SearchNav to={"/search"}>Search</SearchNav>
+            </>
           ) : (
             ""
           )}
-          <ExploreNav to={`/explore`}>Explore</ExploreNav>
-          <SearchNav to={"/search"}>Search</SearchNav>
           {error && <p>Authentication Error</p>}
           {error && isLoading && <p>Loading...</p>}
           {!error && !isLoading && (
