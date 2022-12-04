@@ -290,7 +290,7 @@ const ComplexSearch = () => {
                           onClick={() => setIsCuisineClicked(true)}
                         />
                         korean
-                        <input
+                        {/* <input
                           type="radio"
                           value="mediterranean"
                           name="cuisine"
@@ -321,7 +321,7 @@ const ComplexSearch = () => {
                           onChange={handleChange}
                           onClick={() => setIsCuisineClicked(true)}
                         />
-                        thai{" "}
+                        thai
                         <input
                           type="radio"
                           value="vietnamese"
@@ -329,7 +329,7 @@ const ComplexSearch = () => {
                           onChange={handleChange}
                           onClick={() => setIsCuisineClicked(true)}
                         />
-                        vietnamese
+                        vietnamese */}
                       </HiddenCuisine>
                     ) : (
                       ""

@@ -19,9 +19,9 @@ const Header = () => {
         <ExploreSearch>
           {isAuthenticated ? (
             <>
-              <ProfileNav to={"/profile"}>Profile</ProfileNav>
-              <ExploreNav to={`/explore`}>Explore</ExploreNav>
               <SearchNav to={"/search"}>Search</SearchNav>
+              <ExploreNav to={`/explore`}>Explore</ExploreNav>
+              <ProfileNav to={"/profile"}>Profile</ProfileNav>
             </>
           ) : (
             ""

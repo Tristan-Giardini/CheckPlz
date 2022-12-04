@@ -32,7 +32,7 @@ const getRandomRecipes = async (req, res) => {
   try {
     const result = JSON.parse(
       await request(
-        `https://api.spoonacular.com/recipes/random?apiKey=${API_KEY}&tags=main course&number=5`,
+        `https://api.spoonacular.com/recipes/random?apiKey=${API_KEY}&tags=main course&number=10`,
         {
           headers: { "Content-Type": "application/json" },
         }
@@ -101,7 +101,7 @@ const getSimilarRecipes = async (req, res) => {
     const id = req.params.id;
     const result = JSON.parse(
       await request(
-        `https://api.spoonacular.com/recipes/${id}/similar?apiKey=${API_KEY}&number=5`,
+        `https://api.spoonacular.com/recipes/${id}/similar?apiKey=${API_KEY}&number=6`,
         {
           headers: { "Content-Type": "application/json" },
         }
@@ -128,7 +128,7 @@ const getDietaryRecipes = async (req, res) => {
     const randomDiet = dietValues[randomNumber];
     const result = JSON.parse(
       await request(
-        `https://api.spoonacular.com/recipes/random?apiKey=${API_KEY}&tags=${randomDiet}&number=5`,
+        `https://api.spoonacular.com/recipes/random?apiKey=${API_KEY}&tags=${randomDiet}&number=10`,
         {
           headers: { "Content-Type": "application/json" },
         }
@@ -167,7 +167,7 @@ const getCuisineRecipes = async (req, res) => {
     const randomCuisine = cuisineValues[randomNumber];
     const result = JSON.parse(
       await request(
-        `https://api.spoonacular.com/recipes/random?apiKey=${API_KEY}&tags=${randomCuisine}&number=5`,
+        `https://api.spoonacular.com/recipes/random?apiKey=${API_KEY}&tags=${randomCuisine}&number=10`,
         {
           headers: { "Content-Type": "application/json" },
         }
@@ -357,21 +357,6 @@ const updateIngredient = async (req, res) => {
   }
 };
 
-// const getIngredients = async (req, res) => {
-//   try {
-//     // await client.connect();
-//     // const db = client.db("CheckPlz");
-//     const db = await getClientDB();
-//     const id = req.params.id;
-//     const result = await db.collection("Users").findOne({ _id: id });
-//     res.status(200).json({ status: 200, message: "User found", data: result });
-//   } catch (err) {
-//     res.status(400).json({ status: 400, message: "Could not find user" });
-//   } finally {
-//     // client.close();
-//   }
-
-// };
 
 module.exports = {
   filteredRecipes,

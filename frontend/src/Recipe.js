@@ -396,7 +396,7 @@ const EditButton = styled.button`
   font-size: 16px;
   color: lightgrey;
   position: absolute;
-  margin-left: 210px;
+  margin-left: 235px;
 `;
 
 const EditSave = styled.div`
