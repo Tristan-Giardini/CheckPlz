@@ -45,10 +45,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use("/", express.static(__dirname + "/"));
 app.use(
   cors({
-    origin: [
-      "https://checkplz-api.onrender.com",
-      "https://checlplz.onrender.com",
-    ],
+    origin: ["https://checlplz.onrender.com"],
   })
 );
 
