@@ -14,6 +14,7 @@ const client = new MongoClient(MONGO_URI, options);
 
 let clientDB = null;
 let timeOut = 0;
+
 const getClientDB = async () => {
   clearTimeout(timeOut);
   if (!clientDB) {
