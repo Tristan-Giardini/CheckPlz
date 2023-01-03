@@ -42,8 +42,8 @@ app.patch("/remove-dislike", removeDislike);
 app.patch("/update-ingredient", updateIngredient);
 app.delete("/delete-user/:id", deleteUser);
 
-// app.listen(8000, () => console.log("Listening on port 8000"));
+app.listen(8000, () => console.log("Listening on port 8000"));
 
-app.listen("https://checkplz.onrender.com/", () =>
-  console.log("Listening on port 8000")
-);
+// app.listen("https://checkplz.onrender.com/", () =>
+//   console.log("Listening on port 8000")
+// );
