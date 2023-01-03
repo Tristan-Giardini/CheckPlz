@@ -18,14 +18,19 @@ const Recipe = () => {
   const { userId, setFailed, setErrorMessage } = useContext(UserContext);
   const [ingredientId, setIngredientId] = useState(null);
   const [editsArray, setEditsArray] = useState(null);
+  const [like, setLike] = useState([]);
+  const [dislike, setDislike] = useState([]);
+  // const [isLiked, setIsLiked] = useState(false);
+  // const [isDisliked, setIsDisliked] = useState(false);
 
   useEffect(() => {
     fetch(`/preferences/${userId}`).then((res) => {
       res
         .json()
         .then((data) => {
-          console.log(data);
           setEditsArray(data.data.edits);
+          setLike(data.data.likes);
+          setDislike(data.data.dislikes);
         })
         .catch((e) => {
           setFailed(true);
@@ -97,13 +102,92 @@ const Recipe = () => {
     updateIngredient();
   };
 
+  // const likes = { recipe: Number(id), id: userId };
+
+  // const handleDislike = () => {
+  //   setIsDisliked((prevDisliked) => !isDisliked);
+  //   setIsLiked(false);
+  //   if (!isDisliked) {
+  //     fetch("/dislike", {
+  //       method: "PATCH",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify(likes),
+  //     })
+  //       .then((response) => response.json())
+  //       .then((data) => {
+  //         console.log("Success:", data);
+  //       })
+  //       .catch((error) => {
+  //         console.error("Error:", error);
+  //       });
+  //   }
+  //   if (isDisliked) {
+  //     fetch("/remove-dislike", {
+  //       method: "PATCH",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify(likes),
+  //     })
+  //       .then((response) => response.json())
+  //       .then((data) => {
+  //         console.log("Success:", data);
+  //       })
+  //       .catch((error) => {
+  //         console.error("Error:", error);
+  //       });
+  //   }
+  // };
+
+  // const handleLike = () => {
+  //   setIsLiked((prevLiked) => !isLiked);
+  //   setIsDisliked(false);
+  //   if (!isLiked) {
+  //     fetch("/like", {
+  //       method: "PATCH",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify(likes),
+  //     })
+  //       .then((response) => response.json())
+  //       .then((data) => {
+  //         console.log("Success:", data);
+  //       })
+  //       .catch((error) => {
+  //         console.error("Error:", error);
+  //       });
+  //   }
+  //   if (isLiked) {
+  //     fetch("/remove-like", {
+  //       method: "PATCH",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify(likes),
+  //     })
+  //       .then((response) => response.json())
+  //       .then((data) => {
+  //         console.log("Success:", data);
+  //       })
+  //       .catch((error) => {
+  //         console.error("Error:", error);
+  //       });
+  //   }
+  // };
+
   let recipeObject = null;
   let alteredIngredient = {};
+
+  const isLiked = like.some((x) => x === Number(id));
 
   if (
     !recipe ||
     !similarRecipes ||
     !recipe.extendedIngredients ||
+    !recipe.analyzedInstructions ||
     !id ||
     !editsArray
   ) {
@@ -120,6 +204,22 @@ const Recipe = () => {
         <Wrapper>
           <Title>
             <h1>{recipe.title}</h1>
+            {/* <Emojis>
+              <Like
+                onClick={handleLike}
+                isLiked={isLiked}
+                isDisliked={isDisliked}
+              >
+                😍
+              </Like>
+              <Dislike
+                onClick={handleDislike}
+                isLiked={isLiked}
+                isDisliked={isDisliked}
+              >
+                🤢
+              </Dislike>
+            </Emojis> */}
           </Title>
           <RecipeContainer>
             <ImageSourceServing>
@@ -128,11 +228,7 @@ const Recipe = () => {
               </ImageDiv>
               <Source>
                 Source:{" "}
-                <a
-                  href={`${recipe.sourceUrl}`}
-                  target="_blank"
-                  rel="noreferrer"
-                >
+                <a href={`${recipe.sourceUrl}`} target="_blank">
                   {recipe.sourceUrl}
                 </a>
               </Source>
@@ -186,7 +282,7 @@ const Recipe = () => {
                       ) : (
                         <IngDiv>{ingredient.original}</IngDiv>
                       )}
-                      {!isEditOpen && isAuthenticated && (
+                      {!isEditOpen && isLiked && (
                         <EditButton
                           onClick={() => {
                             editHandler(
@@ -330,7 +426,31 @@ const Title = styled.div`
   padding-left: 50px;
   max-width: 1000px;
   border-bottom: 2px solid var(--select-grey);
+  display: flex;
+  flex-direction: row;
 `;
+
+// const Emojis = styled.div`
+//   display: flex;
+//   flex-direction: row;
+// `;
+
+// const Like = styled.button`
+//   background-color: transparent;
+//   background-repeat: no-repeat;
+//   border: none;
+//   font-size: 30px;
+//   opacity: ${(props) => (props.isDisliked ? "50%" : "")};
+// `;
+
+// const Dislike = styled.button`
+//   background-color: transparent;
+//   background-repeat: no-repeat;
+//   border: none;
+//   font-size: 30px;
+
+//   opacity: ${(props) => (props.isLiked ? "50%" : "")};
+// `;
 
 const ImageDiv = styled.div`
   img {

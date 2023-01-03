@@ -4,11 +4,13 @@ import { UserContext } from "./UserContext";
 import { useEffect, useState, useContext } from "react";
 import SimilarRecipeCard from "./SimilarRecipeCard";
 import CircularProgress from "@mui/material/CircularProgress";
+import ModalComponent from "./ModalComponent";
 
 const Profile = () => {
-  const { user, isAuthenticated } = useAuth0();
+  const { user, isAuthenticated, logout } = useAuth0();
   const { userId, setFailed, setErrorMessage } = useContext(UserContext);
   const [userPreferences, setUserPreferences] = useState({});
+  const [isModal, setIsModal] = useState(false);
 
   useEffect(() => {
     fetch(`/preferences/${userId}`).then((res) => {
@@ -23,6 +25,31 @@ const Profile = () => {
         });
     });
   }, [userId]);
+
+  const closeOnEscapeKeyDown = (e) => {
+    if ((e.charCode || e.keyCode) === 27) {
+      setIsModal(false);
+    }
+  };
+
+  useEffect(() => {
+    document.body.addEventListener("keydown", closeOnEscapeKeyDown);
+    return function cleanup() {
+      document.body.removeEventListener("keydown", closeOnEscapeKeyDown);
+    };
+  }, []);
+
+  const deleteUser = () => {
+    fetch(`/delete-user/${userId}`, { method: "DELETE" })
+      .then((res) => res.json())
+      .then(() => {
+        logout();
+        window.alert("User deleted!");
+      })
+      .catch((e) => {
+        console.log("Error deleting user");
+      });
+  };
 
   console.log(userPreferences);
 
@@ -44,7 +71,13 @@ const Profile = () => {
               <h1>{user.name}</h1>
               <div>{user.email}</div>
             </Name>
+            <button onClick={() => setIsModal(true)}>Delete account?</button>
           </Title>
+          {!isModal ? null : (
+            <ModalDiv onClick={() => setIsModal(false)}>
+              <ModalComponent setIsModal={setIsModal} deleteUser={deleteUser} />
+            </ModalDiv>
+          )}
           <BottomDiv>
             <h1>Bookmarked Recipes</h1>
             <Container>
@@ -97,6 +130,7 @@ const Wrapper = styled.div`
   margin-right: 175px;
   background-color: white;
   height: 643px;
+  position: relative;
 `;
 
 const Title = styled.div`
@@ -112,6 +146,19 @@ const Title = styled.div`
     width: 5%;
     margin-right: 10px;
   }
+  button {
+    margin-left: 515px;
+  }
+`;
+
+const ModalDiv = styled.div`
+  position: absolute;
+  height: 643px;
+  width: 1090px;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 const Name = styled.div`

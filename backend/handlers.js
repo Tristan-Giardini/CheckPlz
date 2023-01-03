@@ -32,7 +32,7 @@ const getRandomRecipes = async (req, res) => {
   try {
     const result = JSON.parse(
       await request(
-        `https://api.spoonacular.com/recipes/random?apiKey=${API_KEY}&tags=main course&number=10`,
+        `https://api.spoonacular.com/recipes/random?apiKey=${API_KEY}&tags=main course&number=1`,
         {
           headers: { "Content-Type": "application/json" },
         }
@@ -63,7 +63,7 @@ const filteredRecipes = async (req, res) => {
     newIngredients = newIngredients.join();
     const result = JSON.parse(
       await request(
-        `https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY}&includeIngredients=${newIngredients}&ignorePantry=true&instructionsRequired=true&addRecipeInformation=true&number=20&diet=${diet[0]}&cuisine=${cuisine[0]}`,
+        `https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY}&includeIngredients=${newIngredients}&ignorePantry=true&instructionsRequired=true&addRecipeInformation=true&number=1&diet=${diet[0]}&cuisine=${cuisine[0]}`,
         {
           headers: { "Content-Type": "application/json" },
         }
@@ -101,7 +101,7 @@ const getSimilarRecipes = async (req, res) => {
     const id = req.params.id;
     const result = JSON.parse(
       await request(
-        `https://api.spoonacular.com/recipes/${id}/similar?apiKey=${API_KEY}&number=6`,
+        `https://api.spoonacular.com/recipes/${id}/similar?apiKey=${API_KEY}&number=1`,
         {
           headers: { "Content-Type": "application/json" },
         }
@@ -128,7 +128,7 @@ const getDietaryRecipes = async (req, res) => {
     const randomDiet = dietValues[randomNumber];
     const result = JSON.parse(
       await request(
-        `https://api.spoonacular.com/recipes/random?apiKey=${API_KEY}&tags=${randomDiet}&number=10`,
+        `https://api.spoonacular.com/recipes/random?apiKey=${API_KEY}&tags=${randomDiet}&number=1`,
         {
           headers: { "Content-Type": "application/json" },
         }
@@ -167,7 +167,7 @@ const getCuisineRecipes = async (req, res) => {
     const randomCuisine = cuisineValues[randomNumber];
     const result = JSON.parse(
       await request(
-        `https://api.spoonacular.com/recipes/random?apiKey=${API_KEY}&tags=${randomCuisine}&number=10`,
+        `https://api.spoonacular.com/recipes/random?apiKey=${API_KEY}&tags=${randomCuisine}&number=1`,
         {
           headers: { "Content-Type": "application/json" },
         }
@@ -232,6 +232,7 @@ const updateLikes = async (req, res) => {
   try {
     // await client.connect();
     // const db = client.db("CheckPlz");
+    //changed $push to $addToSet so that it doesn't send a double in the edits array
     const db = await getClientDB();
     const { id, recipe } = req.body;
     await db
@@ -241,7 +242,7 @@ const updateLikes = async (req, res) => {
       .collection("Users")
       .updateOne(
         { _id: id },
-        { $push: { edits: { recipeId_: recipe, ingredients: [] } } }
+        { $addToSet: { edits: { recipeId_: recipe, ingredients: [] } } }
       );
     const result = await db
       .collection("Users")
@@ -357,6 +358,21 @@ const updateIngredient = async (req, res) => {
   }
 };
 
+const deleteUser = async (req, res) => {
+  try {
+    const db = await getClientDB();
+    const id = req.params.id;
+    const result = await db.collection("Users").deleteOne({ _id: id });
+    if (result.deletedCount === 1) {
+      res.status(200).json({ status: 200, id, data: result });
+    } else {
+      res.status(400).json({ status: 400, message: "User was not deleted" });
+    }
+  } catch (err) {
+    console.log(err);
+  } finally {
+  }
+};
 
 module.exports = {
   filteredRecipes,
@@ -372,4 +388,5 @@ module.exports = {
   removeDislike,
   getPreferences,
   updateIngredient,
+  deleteUser,
 };

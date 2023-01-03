@@ -14,7 +14,7 @@ const MealCard = ({ recipe, like, dislike }) => {
   const likes = { recipe: recipe.id, id: userId };
 
   const handleDislike = () => {
-    setIsDisliked((previsDisliked) => !isDisliked);
+    setIsDisliked((prevDisliked) => !isDisliked);
     setIsLiked(false);
     if (!isDisliked) {
       fetch("/dislike", {
@@ -50,7 +50,7 @@ const MealCard = ({ recipe, like, dislike }) => {
     }
   };
   const handleLike = () => {
-    setIsLiked((previsLiked) => !isLiked);
+    setIsLiked((prevLiked) => !isLiked);
     setIsDisliked(false);
     if (!isLiked) {
       fetch("/like", {
