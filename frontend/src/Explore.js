@@ -15,7 +15,7 @@ const Explore = () => {
   const [userPreferences, setUserPreferences] = useState({});
 
   useEffect(() => {
-    fetch(`/preferences/${userId}`).then((res) => {
+    fetch(`${process.env.REACT_APP_BACKEND_URL}/preferences/${userId}`).then((res) => {
       res
         .json()
         .then((data) => {
@@ -30,7 +30,7 @@ const Explore = () => {
   }, [userId]);
 
   useEffect(() => {
-    fetch("/random-recipes").then((res) => {
+    fetch(`${process.env.REACT_APP_BACKEND_URL}/random-recipes`).then((res) => {
       res
         .json()
         .then((data) => setRandomRecipes(data.data.recipes))
@@ -39,7 +39,7 @@ const Explore = () => {
           setErrorMessage("Sorry we couldn't find what you were looking for!");
         });
     });
-    fetch("/cuisine-recipes").then((res) => {
+    fetch(`${process.env.REACT_APP_BACKEND_URL}/cuisine-recipes`).then((res) => {
       res
         .json()
         .then((data) => {
@@ -51,7 +51,7 @@ const Explore = () => {
           setErrorMessage("Sorry we couldn't find what you were looking for!");
         });
     });
-    fetch("/dietary-recipes").then((res) => {
+    fetch(`${process.env.REACT_APP_BACKEND_URL}/dietary-recipes`).then((res) => {
       res
         .json()
         .then((data) => {

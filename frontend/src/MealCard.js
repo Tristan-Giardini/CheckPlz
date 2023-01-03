@@ -17,7 +17,7 @@ const MealCard = ({ recipe, like, dislike }) => {
     setIsDisliked((prevDisliked) => !isDisliked);
     setIsLiked(false);
     if (!isDisliked) {
-      fetch("/dislike", {
+      fetch(`${process.env.REACT_APP_BACKEND_URL}/dislike`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -33,7 +33,7 @@ const MealCard = ({ recipe, like, dislike }) => {
         });
     }
     if (isDisliked) {
-      fetch("/remove-dislike", {
+      fetch(`${process.env.REACT_APP_BACKEND_URL}/remove-dislike`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -53,7 +53,7 @@ const MealCard = ({ recipe, like, dislike }) => {
     setIsLiked((prevLiked) => !isLiked);
     setIsDisliked(false);
     if (!isLiked) {
-      fetch("/like", {
+      fetch(`${process.env.REACT_APP_BACKEND_URL}/like`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -69,7 +69,7 @@ const MealCard = ({ recipe, like, dislike }) => {
         });
     }
     if (isLiked) {
-      fetch("/remove-like", {
+      fetch(`${process.env.REACT_APP_BACKEND_URL}/remove-like`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",

@@ -13,17 +13,21 @@ const Profile = () => {
   const [isModal, setIsModal] = useState(false);
 
   useEffect(() => {
-    fetch(`/preferences/${userId}`).then((res) => {
-      res
-        .json()
-        .then((data) => {
-          setUserPreferences(data.data);
-        })
-        .catch((e) => {
-          setFailed(true);
-          setErrorMessage("Sorry we couldn't find what you were looking for!");
-        });
-    });
+    fetch(`${process.env.REACT_APP_BACKEND_URL}/preferences/${userId}`).then(
+      (res) => {
+        res
+          .json()
+          .then((data) => {
+            setUserPreferences(data.data);
+          })
+          .catch((e) => {
+            setFailed(true);
+            setErrorMessage(
+              "Sorry we couldn't find what you were looking for!"
+            );
+          });
+      }
+    );
   }, [userId]);
 
   const closeOnEscapeKeyDown = (e) => {
@@ -40,7 +44,9 @@ const Profile = () => {
   }, []);
 
   const deleteUser = () => {
-    fetch(`/delete-user/${userId}`, { method: "DELETE" })
+    fetch(`${process.env.REACT_APP_BACKEND_URL}/delete-user/${userId}`, {
+      method: "DELETE",
+    })
       .then((res) => res.json())
       .then(() => {
         logout();

@@ -1,6 +1,8 @@
 const express = require("express");
 const helmet = require("helmet");
 const morgan = require("morgan");
+// added Xarah
+const cors = require("cors");
 
 const app = express();
 
@@ -21,9 +23,34 @@ const {
   deleteUser,
 } = require("./handlers");
 
+// added Xarah
+express().use(function (req, res, next) {
+  res.header(
+    "Access-Control-Allow-Methods",
+    "OPTIONS, HEAD, GET, PUT, POST, DELETE"
+  );
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  next();
+});
+
 app.use(express.json());
 app.use(helmet());
 app.use(morgan("tiny"));
+// added Xarah
+app.use(express.static("./server/assets"));
+app.use(express.urlencoded({ extended: false }));
+app.use("/", express.static(__dirname + "/"));
+app.use(
+  cors({
+    origin: [
+      "https://checkplz-api.onrender.com",
+      "https://checlplz.onrender.com",
+    ],
+  })
+);
 
 app.get("/random-recipes", getRandomRecipes);
 app.get("/single-recipe/:id", getRecipeBasedOnId);
