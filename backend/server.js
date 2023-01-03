@@ -24,7 +24,7 @@ const {
 } = require("./handlers");
 
 // added Xarah
-express().use(function (req, res, next) {
+app.use(function (req, res, next) {
   res.header(
     "Access-Control-Allow-Methods",
     "OPTIONS, HEAD, GET, PUT, POST, DELETE"
@@ -48,6 +48,7 @@ app.use(
     origin: ["https://checlplz.onrender.com"],
   })
 );
+//
 
 app.get("/random-recipes", getRandomRecipes);
 app.get("/single-recipe/:id", getRecipeBasedOnId);
