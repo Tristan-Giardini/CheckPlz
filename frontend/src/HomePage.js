@@ -22,7 +22,7 @@ const Homepage = () => {
   useEffect(() => {
     user &&
       newUser &&
-      fetch(`${process.env.REACT_APP_BACKEND_URL}/user`, {
+      fetch(`/user`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

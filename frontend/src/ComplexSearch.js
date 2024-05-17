@@ -26,27 +26,23 @@ const ComplexSearch = () => {
   };
 
   useEffect(() => {
-    fetch(`${process.env.REACT_APP_BACKEND_URL}/preferences/${userId}`).then(
-      (res) => {
-        res
-          .json()
-          .then((data) => {
-            console.log(data);
-            setUserPreferences(data.data);
-          })
-          .catch((e) => {
-            setFailed(true);
-            setErrorMessage(
-              "Sorry we couldn't find what you were looking for!"
-            );
-          });
-      }
-    );
+    fetch(`/preferences/${userId}`).then((res) => {
+      res
+        .json()
+        .then((data) => {
+          console.log(data);
+          setUserPreferences(data.data);
+        })
+        .catch((e) => {
+          setFailed(true);
+          setErrorMessage("Sorry we couldn't find what you were looking for!");
+        });
+    });
   }, [userId]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    fetch(`${process.env.REACT_APP_BACKEND_URL}/filtered-recipes`, {
+    fetch(`/filtered-recipes`, {
       method: "POST",
       headers: {
         Accept: "application/json",

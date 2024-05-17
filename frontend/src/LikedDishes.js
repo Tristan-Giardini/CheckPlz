@@ -8,7 +8,7 @@ const LikedDishes = ({ like }) => {
   const { setFailed, setErrorMessage } = useContext(UserContext);
 
   useEffect(() => {
-    fetch(`${process.env.REACT_APP_BACKEND_URL}/single-recipe/${like}`).then((res) => {
+    fetch(`/single-recipe/${like}`).then((res) => {
       res
         .json()
         .then((data) => setRecipe(data.data))

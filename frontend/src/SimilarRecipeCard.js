@@ -9,20 +9,16 @@ const SimilarRecipeCard = ({ recipe }) => {
   const { setFailed, setErrorMessage } = useContext(UserContext);
 
   useEffect(() => {
-    fetch(`${process.env.REACT_APP_BACKEND_URL}/single-recipe/${recipe}`).then(
-      (res) => {
-        res
-          .json()
-          .then((data) => setRecommendedRecipe(data.data))
-          .catch((e) => {
-            console.log("here");
-            setFailed(true);
-            setErrorMessage(
-              "Sorry we couldn't find what you were looking for!"
-            );
-          });
-      }
-    );
+    fetch(`/single-recipe/${recipe}`).then((res) => {
+      res
+        .json()
+        .then((data) => setRecommendedRecipe(data.data))
+        .catch((e) => {
+          console.log("here");
+          setFailed(true);
+          setErrorMessage("Sorry we couldn't find what you were looking for!");
+        });
+    });
   }, [recipe]);
 
   if (!recommendedRecipe) {

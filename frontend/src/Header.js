@@ -47,7 +47,7 @@ const Wrapper = styled.div`
   top: 0;
   z-index: 4000;
   background-color: transparent;
-  width: 99vw;
+  width: 100vw;
 `;
 
 const ExploreSearch = styled.div`

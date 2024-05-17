@@ -24,7 +24,7 @@ const Recipe = () => {
   // const [isDisliked, setIsDisliked] = useState(false);
 
   useEffect(() => {
-    fetch(`${process.env.REACT_APP_BACKEND_URL}/preferences/${userId}`).then((res) => {
+    fetch(`/preferences/${userId}`).then((res) => {
       res
         .json()
         .then((data) => {
@@ -40,7 +40,7 @@ const Recipe = () => {
   }, [userId]);
 
   useEffect(() => {
-    fetch(`${process.env.REACT_APP_BACKEND_URL}/single-recipe/${id}`).then((res) => {
+    fetch(`/single-recipe/${id}`).then((res) => {
       res
         .json()
         .then((data) => setRecipe(data.data))
@@ -49,7 +49,7 @@ const Recipe = () => {
           setErrorMessage("Sorry we couldn't find what you were looking for!");
         });
     });
-    fetch(`${process.env.REACT_APP_BACKEND_URL}/similar-recipes/${id}`).then((res) => {
+    fetch(`/similar-recipes/${id}`).then((res) => {
       res
         .json()
         .then((data) => setSimilarRecipes(data.data))
