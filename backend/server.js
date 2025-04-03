@@ -46,7 +46,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use("/", express.static(__dirname + "/"));
 app.use(
   cors({
-    origin: ["https://checlplz.onrender.com"],
+    origin: ["https://checkplz.onrender.com"],
   })
 );
 app.use(express.static("./server/assets"));
